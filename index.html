@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edgecaser LLC: Fractional product leadership for complex technology founders</title>
+<meta name="description" content="Fractional product leadership for complex technology founders">
+<link rel="stylesheet" href="/EdgecaserLLC-site/assets/fonts/fonts.css">
+<style>
+  /* brand variables: Edgecaser V3 defaults from brand-identity.md */
+  :root{
+    --ink:#0E0E10;
+    --accent:#9C3A2A;
+    --accent-ink:#9C3A2A;
+    --bg:#F5F2EC;
+    --bg-soft:rgba(14,14,16,.04);
+    --line:rgba(14,14,16,.12);
+    --muted:rgba(14,14,16,.64);
+    --maxw:980px;
+    --pad:28px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:var(--font-sans,Geist,system-ui,-apple-system,"Segoe UI",Arial,sans-serif);
+       line-height:1.6;font-size:17px}
+  a{color:var(--accent-ink)}
+  h1,h2,h3{line-height:1.2;font-weight:600;margin:0 0 14px}
+  h1{font-size:42px;letter-spacing:-.01em}
+  h2{font-size:30px}
+  h3{font-size:19px}
+  p{margin:0 0 14px}
+
+  /* ---- header / footer shell ---- */
+  .pg-top{display:flex;justify-content:space-between;align-items:center;
+          padding:22px max(var(--pad), calc((100% - var(--maxw)) / 2))}
+  .pg-top img{height:40px;display:block}
+  .pg-top nav a{margin-left:22px;text-decoration:none;color:var(--ink);font-size:15px}
+  .pg-top nav a.pg-btn{color:var(--bg)}
+  .pg-footer{border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+  .pg-footer .pg-inner{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:22px;
+          max-width:none;margin:0;padding:26px max(var(--pad), calc((100% - var(--maxw)) / 2))}
+  .pg-footer p{margin:0;color:var(--muted)}
+  .pg-footer nav{display:flex;gap:16px;flex-wrap:wrap;justify-content:flex-end}
+  .pg-footer a{color:var(--ink);text-decoration:none}
+  .pg-footer a:hover{text-decoration:underline}
+
+  /* ---- layout: one centered content column per band ----
+     Each section is a full-bleed band (so the alternating background spans the
+     viewport) whose CONTENT is a single column of width --maxw, centered via padding.
+     Children sit at the column's left edge (a consistent left edge, no per-child
+     centering, which previously left every element at a different x). Narrower
+     elements just cap their measure on the right. */
+  .pg-section{padding:64px max(var(--pad), calc((100% - var(--maxw)) / 2))}
+  .pg-section:nth-of-type(even){background:var(--bg-soft)}
+  .pg-inner{max-width:var(--maxw);margin:0 auto}
+  .pg-section>*{max-width:100%;margin-left:0;margin-right:0}
+  /* A content-width class (pg-faq, pg-capture) applied to the section itself must not cap
+     the full-bleed band: with the padding-based centering above, a section narrower than
+     its own centering padding collapses content to one word per line on wide screens. */
+  .pg-section.pg-faq,.pg-section.pg-capture{max-width:none}
+  .pg-hero{padding:88px max(var(--pad), calc((100% - var(--maxw)) / 2)) 76px;
+           text-align:left}
+  .pg-hero h1{max-width:760px}
+  .pg-kicker{color:var(--accent-ink);font-size:13px;letter-spacing:.14em;
+             text-transform:uppercase;font-weight:700;margin:0 0 12px}
+  .pg-sub{color:var(--muted);font-size:20px;max-width:680px;margin-bottom:22px}
+  .pg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+           gap:18px;padding:0;margin:26px 0;align-items:start}
+  .pg-grid-two{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pg-card{background:rgba(245,242,236,.72);border:1px solid var(--line);border-radius:8px;
+           padding:24px 26px}
+  .pg-card h3{margin-bottom:8px}
+  .pg-card p{font-size:15.5px;color:var(--muted);margin-bottom:8px}
+  .pg-name-strip{list-style:none;padding:0;margin:26px 0;display:grid;
+           grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;max-width:840px}
+  .pg-name-strip li{border:1px solid var(--line);border-radius:8px;
+           background:rgba(245,242,236,.72);padding:12px 14px;text-align:center;
+           font-weight:600;font-size:15px}
+  .pg-steps{counter-reset:step;list-style:none;padding:0;margin:26px 0;max-width:720px}
+  .pg-steps li{counter-increment:step;position:relative;padding:0 0 22px 56px}
+  .pg-steps li::before{content:counter(step);position:absolute;left:0;top:0;
+           width:36px;height:36px;border-radius:8px;background:var(--ink);
+           color:var(--accent);font-weight:700;display:flex;align-items:center;
+           justify-content:center;font-size:16px}
+  .pg-figure{margin:30px 0;max-width:820px}
+  .pg-grid>.pg-figure{margin-top:0}
+  .pg-figure img{width:100%;display:block;border:1px solid var(--line);border-radius:8px}
+  .pg-figure figcaption{color:var(--muted);font-size:14px;margin-top:8px}
+  .pg-trust .pg-figure{max-width:380px}
+  .pg-quote{border-left:4px solid var(--accent);background:rgba(245,242,236,.72);border-radius:0 8px 8px 0;
+            padding:18px 24px;margin:22px 0;max-width:720px;font-size:17px}
+  .pg-faq{max-width:760px;margin:10px 0}
+  .pg-faq details{border-bottom:1px solid var(--line);padding:14px 4px}
+  .pg-faq summary{cursor:pointer;font-weight:600;font-size:17px}
+  .pg-faq p{color:var(--muted);margin:10px 0 4px}
+  .pg-founders .pg-card p:first-of-type{color:var(--accent-ink);font-size:14px;
+            font-weight:600;margin-bottom:6px}
+
+  /* ---- CTA + capture ---- */
+  .pg-cta{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:10px 0 0}
+  .pg-btn{display:inline-block;background:var(--ink);color:var(--bg);text-decoration:none;
+          border-radius:8px;padding:14px 28px;font-weight:600;font-size:16px}
+  .pg-btn:hover{background:#2A2A2E}
+  .pg-btn-soft{background:transparent;color:var(--ink);border:2px solid var(--ink)}
+  .pg-btn-soft:hover{background:var(--bg-soft)}
+  .pg-cta-note{color:var(--muted);font-size:14.5px;margin-top:12px}
+  .pg-capture{background:rgba(245,242,236,.72);border:1px solid var(--line);border-radius:8px;
+              padding:30px 32px;margin:26px auto;max-width:560px}
+  .pg-capture h3{margin-bottom:6px}
+  .pg-capture form{display:flex;flex-direction:column}
+  .pg-capture label{font-weight:600;font-size:14px;margin:14px 0 5px}
+  .pg-capture input,.pg-capture select,.pg-capture textarea{width:100%;box-sizing:border-box;
+              border:1px solid var(--line);border-radius:8px;padding:11px 12px;
+              font-family:inherit;font-size:15px;background:var(--bg);color:var(--ink)}
+  .pg-capture input:focus-visible,.pg-capture select:focus-visible,
+  .pg-capture textarea:focus-visible{outline:2px solid var(--ink);outline-offset:1px;
+              border-color:var(--accent)}
+  .pg-capture form .pg-btn{align-self:flex-start;margin-top:20px;border:0;cursor:pointer}
+  .pg-back-top{position:fixed;right:24px;bottom:24px;z-index:40;width:44px;height:44px;
+              border-radius:999px;background:var(--ink);color:var(--bg);text-decoration:none;
+              border:1px solid rgba(245,242,236,.5);box-shadow:0 8px 22px rgba(14,14,16,.18);
+              display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700}
+  .pg-back-top:hover{background:#2A2A2E}
+  .pg-back-top:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+  @media (max-width:640px){
+    h1{font-size:32px} h2{font-size:25px}
+    .pg-section{padding:46px 20px}
+    .pg-hero{padding:60px 20px 50px}
+    .pg-top{flex-wrap:wrap;gap:10px}
+    .pg-top img{height:36px}
+    .pg-top nav{display:flex;flex-wrap:wrap;gap:8px 14px;width:100%}
+    .pg-top nav a{margin-left:0;font-size:14px}
+    .pg-grid-two{grid-template-columns:1fr}
+    .pg-footer nav{justify-content:flex-start}
+    .pg-back-top{right:16px;bottom:16px;width:40px;height:40px}
+  }
+</style>
+</head>
+<body id="top">
+
+<header class="pg-top">
+  <img src="product-assets/00-edgecaser-08b-logo.png" alt="Edgecaser LLC logo">
+  <nav><a href="/EdgecaserLLC-site/" aria-current="page">Home</a><a href="services.html">Services</a><a href="use-cases.html">Use cases</a><a href="about.html">About</a><a href="/EdgecaserLLC-site/blog/">Blog</a><a class="pg-btn" href="contact.html#book">Book a call</a></nav>
+</header>
+
+<main>
+<section id="hero" class="pg-section pg-hero">
+  <p class="pg-kicker">Edgecaser LLC</p>
+  <h1>Fractional product leadership for complex technology founders</h1>
+  <p class="pg-sub">Edgecaser helps founders decide what to build, how to validate it, where AI or data belongs, and how the team should make product calls after the engagement ends.</p>
+  <figure class="pg-figure">
+    <img src="product-assets/home-hero.png" alt="Structured decision map showing product pressure moving through priorities, validation, AI judgment, and operating cadence.">
+    <figcaption>Pressure in. Clearer product calls out.</figcaption>
+  </figure>
+  <div class="pg-cta">
+    <a class="pg-btn" href="/EdgecaserLLC-site/contact.html#book">Book a 30-minute product fit call</a>
+    <p class="pg-cta-note">A 30-minute call with Ian Brillembourg to understand the product problem, choose the right engagement shape, and outline what a useful first 2 to 4 weeks could look like.</p>
+  </div>
+</section>
+
+
+<section id="product-pressure" class="pg-section pg-problem">
+  <p class="pg-kicker">Product pressure</p>
+  <h2>The hard calls are still on the founder</h2>
+  <p class="pg-sub">The roadmap can look full. The AI demo can look real. The analytics can still leave the founder asking the only question that matters: what should the team build next?</p>
+  <div class="pg-grid">
+    <article class="pg-card">
+      <h3>Founder-owned product calls</h3>
+      <p>Ticket review keeps drifting back into strategy. Every backlog choice needs a founder's read on market timing and what the team can ship without losing the plot. A messy board is annoying. The real cost is the pause before the next slice gets chosen.</p>
+    </article>
+    <article class="pg-card">
+      <h3>AI demos without product shape</h3>
+      <p>A prototype can answer one narrow prompt and still be a long way from a product. The missing work is less flashy: trust boundaries, review rules, evaluation criteria, and release scope. Without that shape, users see a trick instead of a feature.</p>
+    </article>
+    <article class="pg-card">
+      <h3>Artifacts that do not change decisions</h3>
+      <p>Analytics and roadmap docs age fast when nobody trusts them at planning time. The useful version names the validation choice and shows whether the data fits the question. Then the team can decide what actually moves.</p>
+    </article>
+  </div>
+</section>
+
+
+<section id="engagement-shapes" class="pg-section pg-offerings">
+  <p class="pg-kicker">Engagement shapes</p>
+  <h2>Common ways to bring in senior product help</h2>
+  <p class="pg-sub">Sometimes the missing piece is a product leader for a season. Sometimes it is a tighter AI bet or a hard implementation call. For repeat-use products, the missing piece can be engagement-system judgment before the roadmap hardens.</p>
+  <div class="pg-grid pg-grid-two">
+    <div class="pg-card">
+      <h3>Fractional product leadership</h3>
+      <p>For founder-owned product calls, Edgecaser can sit in the senior product chair for a defined period. The work needs real decision authority; if the ask is design staffing or build tickets with no product mandate, it is the wrong fit.</p>
+    </div>
+    <div class="pg-card">
+      <h3>AI product sprints</h3>
+      <p>For an AI demo stuck between prototype and product, the sprint keeps the question small. What should ship? What should wait? Which decision is still missing? The right answer is often a smaller scope instead of a bigger tool.</p>
+    </div>
+    <div class="pg-card">
+      <h3>AI implementation guidance</h3>
+      <p>For teams deciding where AI belongs in a workflow, the guidance stays advisory and tied to product judgment. Edgecaser does not take on implementation work that has been separated from product decisions.</p>
+    </div>
+    <div class="pg-card">
+      <h3>Engagement systems depth</h3>
+      <p>For products that depend on repeat use, Ian can bring experience from games, live operations, consumer UX, motivation loops, progression, incentives, and economy design. That experience belongs in service of product work. Gamification is not the offer.</p>
+    </div>
+  </div>
+  <p class="pg-quote">The fit question is simple: which kind of senior product help will make the next decision clearer?</p>
+</section>
+
+
+<section id="trust-teaser" class="pg-section pg-trust">
+  <p class="pg-kicker">Trust signals</p>
+  <h2>What to expect</h2>
+  <p class="pg-sub">You should know who is doing the work, how the first step works, and what information stays private before you book a call.</p>
+  <div class="pg-grid">
+    <div class="pg-card">
+      <h3>Founder-led product judgment</h3>
+      <p>Ian Brillembourg brings 15+ years across product leadership, AI, data, mobile, consumer UX, early-stage companies, and game systems. That operating range matters more than a borrowed endorsement.</p>
+    </div>
+    <div class="pg-card">
+      <h3>A visible first step</h3>
+      <p>The first move is practical: a product fit call, current goals, working artifacts, and a read on the decision pressure. Then the scope gets named as fractional, sprint, or advisory, with a first 2 to 4 week plan.</p>
+    </div>
+    <div class="pg-card">
+      <h3>Constraints stay public</h3>
+      <p>Public materials use cleared facts only. Private roadmaps, dashboards, datasets, PHI, confidential artifacts, and client screenshots stay in the working room.</p>
+    </div>
+  </div>
+  <p class="pg-quote">Bring the product problem, the artifacts you already have, and the decisions that are stuck. The first call should make the next step clearer.</p>
+</section>
+
+
+<section id="final-cta" class="pg-section pg-final-cta">
+  <p class="pg-kicker">Next step</p>
+  <h2>Bring the product decision that is stuck</h2>
+  <p class="pg-sub">Use the 30-minute call with Ian Brillembourg to put the real pressure on the table. Maybe it needs fractional leadership, a focused sprint, a product review, team process work, implementation guidance, or a smaller advisory lane. The first conversation should turn the next 2 to 4 weeks into a scoping plan you can actually judge.</p>
+  <div class="pg-cta">
+    <a class="pg-btn" href="/EdgecaserLLC-site/contact.html#book">Book a 30-minute product fit call</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="pg-footer">
+  <div class="pg-inner">
+    <div>
+      <p>&copy; 2026 Edgecaser LLC. All rights reserved.</p>
+      <p>Edgecaser LLC</p>
+    </div>
+    <nav aria-label="Footer"><a href="contact.html#book">Book a call</a><a href="/EdgecaserLLC-site/blog/">Blog</a><a href="mailto:contact@edgecaser.com">Email</a><a href="https://www.linkedin.com/in/ianbrillembourg">LinkedIn</a></nav>
+  </div>
+</footer>
+
+<a class="pg-back-top" href="#top" aria-label="Back to top">&#8593;</a>
+
+</body>
+</html>
