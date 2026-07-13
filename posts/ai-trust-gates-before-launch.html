@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Put AI trust gates in the product spec before launch | Edgecaser LLC</title>
+<meta name="description" content="A practical case for writing AI trust gates into product specs before launch, so users know when to trust, review, or ignore output.">
+<link rel="stylesheet" href="/EdgecaserLLC-site/assets/fonts/fonts.css">
+
+<style>
+:root{
+--bg:#F5F2EC;
+--surface:rgba(14,14,16,.04);
+--text:#0E0E10;
+--muted:rgba(14,14,16,.64);
+--line:rgba(14,14,16,.12);
+--accent:#9C3A2A;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font-sans,Geist,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif);background:var(--bg);color:var(--text);line-height:1.7;}
+a{text-decoration:none;color:inherit;}
+.wrap{max-width:780px;margin:0 auto;padding:0 28px;}
+.pg-top{display:flex;justify-content:space-between;align-items:center;padding:22px max(28px, calc((100% - 980px) / 2));}
+.pg-top img{height:40px;display:block;}
+.pg-top nav a{margin-left:22px;text-decoration:none;color:var(--text);font-size:15px;}
+.pg-top nav a.pg-btn{color:var(--bg);}
+.pg-btn{display:inline-block;background:var(--text);color:var(--bg);text-decoration:none;border-radius:8px;padding:14px 28px;font-weight:600;font-size:16px;}
+.pg-btn:hover{background:#2A2A2E;}
+.hero{padding:72px 0 36px;}
+.tag{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:8px 12px;color:var(--accent);font-family:var(--font-mono,"JetBrains Mono",ui-monospace,monospace);font-size:12px;letter-spacing:0;text-transform:uppercase;}
+.hero h1{font-size:48px;line-height:1.1;margin:18px 0 14px;font-weight:600;letter-spacing:0;}
+.hero .sub{font-size:21px;color:var(--muted);max-width:680px;}
+.meta{margin-top:18px;color:var(--muted);font-size:14px;}
+.divider{height:1px;background:var(--line);margin:30px 0 0;}
+.content{padding:50px 0 90px;}
+.content h2{font-size:30px;margin:44px 0 14px;}
+.content h3{font-size:22px;margin:30px 0 10px;}
+.content p{font-size:19px;color:rgba(14,14,16,.82);margin:0 0 22px;}
+.content ul{padding-left:24px;margin:10px 0 28px;}
+.content li{font-size:18px;color:rgba(14,14,16,.82);margin:8px 0;}
+.content a{color:var(--accent);}
+.quote{margin:40px 0;padding:26px 30px;border-left:3px solid var(--accent);background:var(--surface);color:var(--text);font-size:22px;line-height:1.5;}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:40px 0;}
+.stat{padding:24px;border:1px solid var(--line);border-radius:8px;background:var(--surface);}
+.stat .num{font-size:32px;font-weight:800;}
+.stat .label{color:var(--muted);margin-top:6px;font-size:15px;}
+.highlight{color:var(--accent);font-weight:700;}
+.refs{margin:54px 0 0;padding-top:24px;border-top:1px solid var(--line);}
+.refs h2{font-size:22px;}
+.refs ol{padding-left:22px;}
+.refs li{font-size:15px;color:var(--muted);margin:8px 0;}
+.refs a{color:var(--accent);word-break:break-word;}
+.cta{margin-top:64px;padding:38px;border-radius:8px;background:var(--text);color:var(--bg);}
+.cta h3{margin:0 0 12px;font-size:30px;line-height:1.12;}
+.cta p{color:rgba(245,242,236,.78);font-size:18px;}
+.btn{display:inline-block;margin-top:12px;background:var(--bg);color:var(--text);padding:13px 22px;border-radius:8px;font-weight:700;}
+.pg-footer{border-top:1px solid var(--line);color:var(--muted);font-size:14px;}
+.pg-footer .pg-inner{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:22px;padding:26px max(28px, calc((100% - 980px) / 2));}
+.pg-footer p{margin:0;color:var(--muted);}
+.pg-footer nav{display:flex;gap:16px;flex-wrap:wrap;justify-content:flex-end;}
+.pg-footer a{color:var(--text);text-decoration:none;}
+.pg-footer a:hover{text-decoration:underline;}
+img.heroimg{width:100%;border-radius:8px;margin:32px 0;border:1px solid var(--line);}
+@media(max-width:900px){.hero h1{font-size:40px}.stats{grid-template-columns:1fr}.content p,.content li{font-size:18px}}
+@media(max-width:600px){.hero h1{font-size:32px}.hero .sub{font-size:18px}.content h2{font-size:26px}.pg-top{flex-wrap:wrap;gap:10px}.pg-top img{height:36px}.pg-top nav{display:flex;flex-wrap:wrap;gap:8px 14px;width:100%}.pg-top nav a{margin-left:0;font-size:14px}.pg-footer nav{justify-content:flex-start}}
+</style>
+</head>
+
+<body>
+
+<header class="pg-top">
+<img src="/EdgecaserLLC-site/product-assets/00-edgecaser-08b-logo.png" alt="Edgecaser LLC logo">
+<nav><a href="/EdgecaserLLC-site/">Home</a><a href="/EdgecaserLLC-site/services.html">Services</a><a href="/EdgecaserLLC-site/use-cases.html">Use cases</a><a href="/EdgecaserLLC-site/about.html">About</a><a href="/EdgecaserLLC-site/blog/" aria-current="page">Blog</a><a class="pg-btn" href="/EdgecaserLLC-site/contact.html#book">Book a call</a></nav>
+</header>
+
+<section class="hero wrap">
+<span class="tag">AI product judgment</span>
+<h1>Put AI trust gates in the product spec before launch</h1>
+<p class="sub">A working demo proves the model answered once. The spec has to explain what users should trust, review, or ignore when the next answer is partial, stale, or wrong.</p>
+<div class="meta">Edgecaser LLC &middot; 5 min read</div>
+<div class="divider"></div>
+</section>
+
+<main class="content wrap">
+
+<img class="heroimg" src="assets/ai-trust-gates-before-launch.png" alt="A restrained abstract workbench scene shows checkpoints around an AI product decision object, suggesting where users should trust, review, or ignore model output.">
+
+<p>The risky moment in an AI product usually does not look risky. The demo holds together. The model returns a good answer on the first try. Someone in the room says, "ship it," and for a minute that sounds reasonable.</p>
+
+<p>But the demo has only answered the friendly question: can the system produce something impressive on a path we chose? The product owes users a harder answer. What should they do when the output is thin, stale, overconfident, or right only under assumptions they cannot see?</p>
+
+<p>The <a href="https://arxiv.org/abs/2606.15708">2026 AI Index</a>, submitted in April 2026 and last revised on June 29, frames the issue as a gap between rising AI capability and the governance, evaluation, education systems, and data infrastructure around it. For early product teams, that gap first appears in the spec. Not in policy.</p>
+
+<h2>The demo answers a question. The product must explain a decision.</h2>
+
+<p>A trust gate is a product decision point where the experience changes because the AI answer has become uncertain, risky, or out of bounds. It can ask for more input. It can require human review. It can show source quality, or stop the next step entirely.</p>
+
+<p>Put that in the product spec. If the gate waits for a launch checklist, it shows up after the interface has already taught everyone the wrong standard: did the model respond?</p>
+
+<div class="quote">Do not make "Does the model work?" the launch question. Ask where the product changes behavior when trust changes.</div>
+
+<p>Demos are generous. Real users bring weird inputs, old files, half-formed goals, pressure from a boss, and a strong instinct to trust confident prose.</p>
+
+<h2>Trust gates are part of human oversight</h2>
+
+<p>A June 2026 study of <a href="https://arxiv.org/abs/2606.05391">developers using software agents</a> interviewed 17 experienced developers and found that oversight was not limited to final review. The authors named four forms: a priori control, co-planning, real-time monitoring, and post hoc review. That finding turns "human in the loop" from a slogan into product work.</p>
+
+<p>The paper is about software agents, but the product lesson travels. If an AI system plans work, calls tools, drafts recommendations, or edits user material, the final accept button is too late to carry all the safety burden. The decision points are earlier and messier.</p>
+
+<p>That is product management, not model evaluation. A test set can show how the system behaved under known conditions. It cannot choose which user action needs friction, which output needs a citation, or when the interface should say, plainly, "I do not know enough."</p>
+
+<h2>What belongs in the spec</h2>
+
+<p>The trust section of an AI product spec should be short enough to survive sprint planning and specific enough for design and engineering to act on. No ceremony. Decisions.</p>
+
+<ul>
+<li>An input gate that names accepted requests and requests that need clarification or refusal.</li>
+<li>A source gate that decides when users see citations, freshness, missing context, or weak evidence.</li>
+<li>An action gate that separates a harmless draft from anything that can change a file, send a message, spend money, or affect another user.</li>
+<li>A confidence gate that prevents fake precision and states what the interface does when certainty is low.</li>
+<li>A review gate that names who reviews what and when.</li>
+<li>A recovery gate that explains what the user can do when the system is stuck or wrong.</li>
+</ul>
+
+<p>Notice what is missing: a blanket claim that the system is safe. A spec is not a certificate. It is the working agreement between product, design, engineering, and the experience a user actually gets.</p>
+
+<h2>A generic example: an AI research assistant</h2>
+
+<p>Imagine a startup building an AI research assistant for product teams. The demo summarizes customer interviews, groups themes, and drafts opportunity notes. In the room, it earns trust in five minutes.</p>
+
+<p>The launch spec needs a colder eye. If the source set has only two interviews, the assistant should not sell a theme as a pattern. If a transcript predates the current product direction, the interface should mark it stale or ask whether it belongs. If the assistant cannot find the quote behind a recommendation, it should downgrade the claim instead of dressing it up.</p>
+
+<p>Human review needs an address, too. A founder reading final notes on Friday is doing different work from a researcher approving theme merges during synthesis. A product manager accepting an opportunity brief is different again. Review the source, the cluster, the wording, or the downstream decision. Do not pretend those are the same job.</p>
+
+<p>The product improves when those gates are named early. The team can design empty states, review states, source states, and refusal states as part of the main workflow. Users learn the system's limits from the interface, not from a surprise.</p>
+
+<h2>Where product leadership makes the difference</h2>
+
+<p>The <a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI Risk Management Framework</a> is broader than a startup product spec, but its wording is useful here: it is voluntary guidance for putting trustworthiness considerations into the design, development, use, and evaluation of AI products, services, and systems. NIST says its companion <a href="https://www.nist.gov/itl/ai-risk-management-framework/nist-ai-rmf-playbook">AI RMF Playbook</a> maps suggested actions to four functions: Govern, Map, Measure, and Manage.</p>
+
+<p>A startup should not turn its spec into a governance manual. It should translate risk language into interface choices: what feels easy, what slows down, what gets explained, and what the product refuses to do. That translation is senior product work.</p>
+
+<p>This matters most before a company has a real product leadership layer. The founder may see the technical possibility better than anyone else. The team may be moving fast. Without trust gates, though, the default product is the demo path with a launch button attached. I would not ship that.</p>
+
+<h2>Write gates while the product is still plastic</h2>
+
+<p>The best time to write AI trust gates is before launch, while the workflow can still bend. After launch, every missing gate is harder to add. Users read it as friction. Teams read it as a retreat. The first version has already taught a habit.</p>
+
+<p>Put the gates in the spec early. Name the uncertain moments. Decide what users see, what they can do, and where a person steps in. The point is not universal trust. The point is earned trust, visible in the product before anyone needs it.</p>
+
+<div class="cta">
+<h3>Working an AI demo into a real product?</h3>
+<p>Edgecaser helps founders clarify AI workflow fit, trust boundaries, review points, and product scope before launch pressure hardens the wrong path.</p>
+<a class="btn" href="https://www.edgecaser.com">Let's talk about your product decision</a>
+</div>
+
+<div class="refs">
+<h2>References</h2>
+<ol>
+<li><a href="https://arxiv.org/abs/2606.15708">arXiv - Artificial Intelligence Index Report 2026</a></li>
+<li><a href="https://arxiv.org/abs/2606.05391">arXiv - Human oversight of agentic systems in practice: Examining the oversight work, challenges, and heuristics of developers using software agents</a></li>
+<li><a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST - AI Risk Management Framework</a></li>
+<li><a href="https://www.nist.gov/itl/ai-risk-management-framework/nist-ai-rmf-playbook">NIST - NIST AI RMF Playbook</a></li>
+</ol>
+</div>
+
+</main>
+
+<footer class="pg-footer">
+<div class="pg-inner">
+<p>&copy; 2026 Edgecaser LLC</p>
+<nav aria-label="Footer"><a href="/EdgecaserLLC-site/contact.html#book">Book a call</a><a href="/EdgecaserLLC-site/blog/">Blog</a><a href="mailto:contact@edgecaser.com">Email</a><a href="https://www.linkedin.com/in/ianbrillembourg">LinkedIn</a></nav>
+</div>
+</footer>
+
+</body>
+</html>

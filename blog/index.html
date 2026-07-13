@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog | Edgecaser LLC</title>
+<meta name="description" content="Writing on product judgment, AI trust boundaries, and product operating cadence from Edgecaser LLC.">
+<link rel="stylesheet" href="/EdgecaserLLC-site/assets/fonts/fonts.css">
+<style>
+  /* brand variables: Edgecaser V3 defaults from brand-identity.md (kept in sync with site/index.html) */
+  :root{
+    --ink:#0E0E10;
+    --accent:#9C3A2A;
+    --accent-ink:#9C3A2A;
+    --bg:#F5F2EC;
+    --bg-soft:rgba(14,14,16,.04);
+    --line:rgba(14,14,16,.12);
+    --muted:rgba(14,14,16,.64);
+    --maxw:980px;
+    --pad:28px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:var(--font-sans,Geist,system-ui,-apple-system,"Segoe UI",Arial,sans-serif);
+       line-height:1.6;font-size:17px}
+  a{color:var(--accent-ink)}
+
+  /* ---- header: identical to site/index.html .pg-top ---- */
+  .pg-top{display:flex;justify-content:space-between;align-items:center;
+          padding:22px max(var(--pad), calc((100% - var(--maxw)) / 2))}
+  .pg-top img{height:40px;display:block}
+  .pg-top nav a{margin-left:22px;text-decoration:none;color:var(--ink);font-size:15px}
+  .pg-top nav a.pg-btn{color:var(--bg)}
+  .pg-btn{display:inline-block;background:var(--ink);color:var(--bg);text-decoration:none;
+          border-radius:8px;padding:14px 28px;font-weight:600;font-size:16px}
+  .pg-btn:hover{background:#2A2A2E}
+
+  /* ---- blog body: shares the site's centered-column measure so the logo,
+     heading, and post cards all sit on one left edge ---- */
+  .wrap{padding-left:max(var(--pad), calc((100% - var(--maxw)) / 2));
+        padding-right:max(var(--pad), calc((100% - var(--maxw)) / 2))}
+  .head{padding-top:64px;padding-bottom:8px}
+  .head h1{font-size:40px;font-weight:600;line-height:1.2;margin:0 0 10px;letter-spacing:-0.01em}
+  .head p{color:var(--muted);font-size:18px;max-width:640px;margin:0}
+  .list{padding-top:24px;padding-bottom:90px}
+  .post{border-bottom:1px solid var(--line);padding:26px 0}
+  .post a{font-size:24px;font-weight:700;color:var(--ink);text-decoration:none}
+  .post a:hover{color:var(--accent)}
+  .post .meta{color:var(--muted);font-size:14px;margin:6px 0 10px}
+  .post .excerpt{color:var(--ink);font-size:17px;margin:0}
+  .empty{color:var(--muted);font-size:17px;padding:30px 0}
+
+  /* ---- footer: mirrors site/index.html .pg-footer ---- */
+  .pg-footer{border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+  .pg-footer .pg-inner{display:flex;justify-content:space-between;align-items:flex-start;
+          flex-wrap:wrap;gap:22px;
+          padding:26px max(var(--pad), calc((100% - var(--maxw)) / 2))}
+  .pg-footer p{margin:0;color:var(--muted)}
+  .pg-footer nav{display:flex;gap:16px;flex-wrap:wrap;justify-content:flex-end}
+  .pg-footer a{color:var(--ink);text-decoration:none}
+  .pg-footer a:hover{text-decoration:underline}
+
+  @media (max-width:640px){
+    .head h1{font-size:32px}
+    .pg-top{flex-wrap:wrap;gap:10px}
+    .pg-top img{height:36px}
+    .pg-top nav{display:flex;flex-wrap:wrap;gap:8px 14px;width:100%}
+    .pg-top nav a{margin-left:0;font-size:14px}
+    .pg-footer nav{justify-content:flex-start}
+  }
+</style>
+</head>
+<body id="top">
+
+<header class="pg-top">
+  <img src="/EdgecaserLLC-site/product-assets/00-edgecaser-08b-logo.png" alt="Edgecaser LLC logo">
+  <nav><a href="/EdgecaserLLC-site/">Home</a><a href="/EdgecaserLLC-site/services.html">Services</a><a href="/EdgecaserLLC-site/use-cases.html">Use cases</a><a href="/EdgecaserLLC-site/about.html">About</a><a href="/EdgecaserLLC-site/blog/" aria-current="page">Blog</a><a class="pg-btn" href="/EdgecaserLLC-site/contact.html#book">Book a call</a></nav>
+</header>
+
+<section class="head wrap">
+<h1>Blog</h1>
+<p>Writing on product judgment, AI trust boundaries, and the operating decisions in front of founder-led teams. Newest first.</p>
+</section>
+
+<main class="list wrap">
+
+<!-- BEGIN POSTS (newest post is inserted directly below this line) -->
+    <article class="post" data-date="2026-07-07">
+      <a href="/EdgecaserLLC-site/posts/ai-trust-gates-before-launch.html">Put AI trust gates in the product spec before launch</a>
+      <div class="meta">July 2026 &middot; 5 min read</div>
+      <p class="excerpt">A working demo proves the model answered once. The spec has to explain what users should trust, review, or ignore when the next answer is partial, stale, or wrong.</p>
+    </article>
+
+<!-- END POSTS -->
+
+</main>
+
+<footer class="pg-footer">
+  <div class="pg-inner">
+    <p>&copy; 2026 Edgecaser LLC</p>
+    <nav aria-label="Footer"><a href="/EdgecaserLLC-site/contact.html#book">Book a call</a><a href="/EdgecaserLLC-site/blog/">Blog</a><a href="mailto:contact@edgecaser.com">Email</a><a href="https://www.linkedin.com/in/ianbrillembourg">LinkedIn</a></nav>
+  </div>
+</footer>
+
+</body>
+</html>
