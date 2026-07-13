@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edgecaser LLC: Fractional product leadership for complex technology founders</title>
+<meta name="description" content="Fractional product leadership for complex technology founders">
+<link rel="stylesheet" href="/EdgecaserLLC-site/assets/fonts/fonts.css">
+<style>
+  /* brand variables: Edgecaser V3 defaults from brand-identity.md */
+  :root{
+    --ink:#0E0E10;
+    --accent:#9C3A2A;
+    --accent-ink:#9C3A2A;
+    --bg:#F5F2EC;
+    --bg-soft:rgba(14,14,16,.04);
+    --line:rgba(14,14,16,.12);
+    --muted:rgba(14,14,16,.64);
+    --maxw:980px;
+    --pad:28px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:var(--font-sans,Geist,system-ui,-apple-system,"Segoe UI",Arial,sans-serif);
+       line-height:1.6;font-size:17px}
+  a{color:var(--accent-ink)}
+  h1,h2,h3{line-height:1.2;font-weight:600;margin:0 0 14px}
+  h1{font-size:42px;letter-spacing:-.01em}
+  h2{font-size:30px}
+  h3{font-size:19px}
+  p{margin:0 0 14px}
+
+  /* ---- header / footer shell ---- */
+  .pg-top{display:flex;justify-content:space-between;align-items:center;
+          padding:22px max(var(--pad), calc((100% - var(--maxw)) / 2))}
+  .pg-top img{height:40px;display:block}
+  .pg-top nav a{margin-left:22px;text-decoration:none;color:var(--ink);font-size:15px}
+  .pg-top nav a.pg-btn{color:var(--bg)}
+  .pg-footer{border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+  .pg-footer .pg-inner{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:22px;
+          max-width:none;margin:0;padding:26px max(var(--pad), calc((100% - var(--maxw)) / 2))}
+  .pg-footer p{margin:0;color:var(--muted)}
+  .pg-footer nav{display:flex;gap:16px;flex-wrap:wrap;justify-content:flex-end}
+  .pg-footer a{color:var(--ink);text-decoration:none}
+  .pg-footer a:hover{text-decoration:underline}
+
+  /* ---- layout: one centered content column per band ----
+     Each section is a full-bleed band (so the alternating background spans the
+     viewport) whose CONTENT is a single column of width --maxw, centered via padding.
+     Children sit at the column's left edge (a consistent left edge, no per-child
+     centering, which previously left every element at a different x). Narrower
+     elements just cap their measure on the right. */
+  .pg-section{padding:64px max(var(--pad), calc((100% - var(--maxw)) / 2))}
+  .pg-section:nth-of-type(even){background:var(--bg-soft)}
+  .pg-inner{max-width:var(--maxw);margin:0 auto}
+  .pg-section>*{max-width:100%;margin-left:0;margin-right:0}
+  /* A content-width class (pg-faq, pg-capture) applied to the section itself must not cap
+     the full-bleed band: with the padding-based centering above, a section narrower than
+     its own centering padding collapses content to one word per line on wide screens. */
+  .pg-section.pg-faq,.pg-section.pg-capture{max-width:none}
+  .pg-hero{padding:88px max(var(--pad), calc((100% - var(--maxw)) / 2)) 76px;
+           text-align:left}
+  .pg-hero h1{max-width:760px}
+  .pg-kicker{color:var(--accent-ink);font-size:13px;letter-spacing:.14em;
+             text-transform:uppercase;font-weight:700;margin:0 0 12px}
+  .pg-sub{color:var(--muted);font-size:20px;max-width:680px;margin-bottom:22px}
+  .pg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+           gap:18px;padding:0;margin:26px 0;align-items:start}
+  .pg-grid-two{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pg-card{background:rgba(245,242,236,.72);border:1px solid var(--line);border-radius:8px;
+           padding:24px 26px}
+  .pg-card h3{margin-bottom:8px}
+  .pg-card p{font-size:15.5px;color:var(--muted);margin-bottom:8px}
+  .pg-name-strip{list-style:none;padding:0;margin:26px 0;display:grid;
+           grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;max-width:840px}
+  .pg-name-strip li{border:1px solid var(--line);border-radius:8px;
+           background:rgba(245,242,236,.72);padding:12px 14px;text-align:center;
+           font-weight:600;font-size:15px}
+  .pg-steps{counter-reset:step;list-style:none;padding:0;margin:26px 0;max-width:720px}
+  .pg-steps li{counter-increment:step;position:relative;padding:0 0 22px 56px}
+  .pg-steps li::before{content:counter(step);position:absolute;left:0;top:0;
+           width:36px;height:36px;border-radius:8px;background:var(--ink);
+           color:var(--accent);font-weight:700;display:flex;align-items:center;
+           justify-content:center;font-size:16px}
+  .pg-figure{margin:30px 0;max-width:820px}
+  .pg-grid>.pg-figure{margin-top:0}
+  .pg-figure img{width:100%;display:block;border:1px solid var(--line);border-radius:8px}
+  .pg-figure figcaption{color:var(--muted);font-size:14px;margin-top:8px}
+  .pg-trust .pg-figure{max-width:380px}
+  .pg-quote{border-left:4px solid var(--accent);background:rgba(245,242,236,.72);border-radius:0 8px 8px 0;
+            padding:18px 24px;margin:22px 0;max-width:720px;font-size:17px}
+  .pg-faq{max-width:760px;margin:10px 0}
+  .pg-faq details{border-bottom:1px solid var(--line);padding:14px 4px}
+  .pg-faq summary{cursor:pointer;font-weight:600;font-size:17px}
+  .pg-faq p{color:var(--muted);margin:10px 0 4px}
+  .pg-founders .pg-card p:first-of-type{color:var(--accent-ink);font-size:14px;
+            font-weight:600;margin-bottom:6px}
+
+  /* ---- CTA + capture ---- */
+  .pg-cta{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:10px 0 0}
+  .pg-btn{display:inline-block;background:var(--ink);color:var(--bg);text-decoration:none;
+          border-radius:8px;padding:14px 28px;font-weight:600;font-size:16px}
+  .pg-btn:hover{background:#2A2A2E}
+  .pg-btn-soft{background:transparent;color:var(--ink);border:2px solid var(--ink)}
+  .pg-btn-soft:hover{background:var(--bg-soft)}
+  .pg-cta-note{color:var(--muted);font-size:14.5px;margin-top:12px}
+  .pg-capture{background:rgba(245,242,236,.72);border:1px solid var(--line);border-radius:8px;
+              padding:30px 32px;margin:26px auto;max-width:560px}
+  .pg-capture h3{margin-bottom:6px}
+  .pg-capture form{display:flex;flex-direction:column}
+  .pg-capture label{font-weight:600;font-size:14px;margin:14px 0 5px}
+  .pg-capture input,.pg-capture select,.pg-capture textarea{width:100%;box-sizing:border-box;
+              border:1px solid var(--line);border-radius:8px;padding:11px 12px;
+              font-family:inherit;font-size:15px;background:var(--bg);color:var(--ink)}
+  .pg-capture input:focus-visible,.pg-capture select:focus-visible,
+  .pg-capture textarea:focus-visible{outline:2px solid var(--ink);outline-offset:1px;
+              border-color:var(--accent)}
+  .pg-capture form .pg-btn{align-self:flex-start;margin-top:20px;border:0;cursor:pointer}
+  .pg-back-top{position:fixed;right:24px;bottom:24px;z-index:40;width:44px;height:44px;
+              border-radius:999px;background:var(--ink);color:var(--bg);text-decoration:none;
+              border:1px solid rgba(245,242,236,.5);box-shadow:0 8px 22px rgba(14,14,16,.18);
+              display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700}
+  .pg-back-top:hover{background:#2A2A2E}
+  .pg-back-top:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+  @media (max-width:640px){
+    h1{font-size:32px} h2{font-size:25px}
+    .pg-section{padding:46px 20px}
+    .pg-hero{padding:60px 20px 50px}
+    .pg-top{flex-wrap:wrap;gap:10px}
+    .pg-top img{height:36px}
+    .pg-top nav{display:flex;flex-wrap:wrap;gap:8px 14px;width:100%}
+    .pg-top nav a{margin-left:0;font-size:14px}
+    .pg-grid-two{grid-template-columns:1fr}
+    .pg-footer nav{justify-content:flex-start}
+    .pg-back-top{right:16px;bottom:16px;width:40px;height:40px}
+  }
+</style>
+</head>
+<body id="top">
+
+<header class="pg-top">
+  <img src="/EdgecaserLLC-site/assets/logos/00-edgecaser-08b-logo.png" alt="Edgecaser LLC logo">
+  <nav><a href="/EdgecaserLLC-site/site/.preview-product-page-home.html" aria-current="page">Home</a><a href="/EdgecaserLLC-site/site/.preview-product-page-services.html">Services</a><a href="/EdgecaserLLC-site/site/.preview-product-page-use-cases.html">Use cases</a><a href="/EdgecaserLLC-site/site/.preview-product-page-about.html">About</a><a href="/EdgecaserLLC-site/site/.preview-blog-index.html">Blog</a><a class="pg-btn" href="/EdgecaserLLC-site/site/.preview-product-page-contact.html#book">Book a call</a></nav>
+</header>
+
+<main>
+<section id="hero" class="pg-section pg-hero">
+  <p class="pg-kicker">Edgecaser LLC</p>
+  <h1>Fractional product leadership for complex technology founders</h1>
+  <p class="pg-sub">Edgecaser helps founders decide what to build, how to validate it, where AI or data belongs, and how the team should make product calls after the engagement ends.</p>
+  <figure class="pg-figure">
+    <img src="/EdgecaserLLC-site/drafts/page-home-hero/image.png?v=1783452702" alt="Structured decision map showing product pressure moving through priorities, validation, AI judgment, and operating cadence.">
+    <figcaption>Pressure in. Clearer product calls out.</figcaption>
+  </figure>
+  <div class="pg-cta">
+    <a class="pg-btn" href="/EdgecaserLLC-site/contact#capture">Book a 30-minute product fit call</a>
+    <p class="pg-cta-note">A 30-minute call with Ian Brillembourg to understand the product problem, choose the right engagement shape, and outline what a useful first 2 to 4 weeks could look like.</p>
+  </div>
+</section>
+
+
+<section class="bp-review-panel" style="max-width:780px;margin:0 auto 60px;padding:0 28px"><div style="border:2px dashed #2563eb;border-radius:14px;padding:24px;background:#f5f7fb;margin-bottom:18px"><div style="color:#2563eb;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:6px">Localhost review &middot; not part of the published page</div><div style="color:#333;font-size:15px;margin-bottom:12px"><strong>Content corrections</strong> (one per line) &mdash; saves to <code>drafts/page-home-hero/feedback.md</code>. Leave empty if the writing is fine.</div><textarea id="bp-fb-page-home-hero" rows="5" style="width:100%;box-sizing:border-box;background:#fff;color:#111;border:1px solid #c9d2e0;border-radius:10px;padding:12px;font-family:inherit;font-size:15px" placeholder="- Lead with the key stat&#10;- Cut the salesy sentence&#10;- Use the linked report as the second source"></textarea><div style="color:#333;font-size:15px;margin:14px 0 12px"><strong>Image corrections</strong> (one per line) &mdash; saves to <code>drafts/page-home-hero/feedback-image.md</code> and regenerates the image. Leave empty to keep the image.</div><textarea id="bp-fbi-page-home-hero" rows="3" style="width:100%;box-sizing:border-box;background:#fff;color:#111;border:1px solid #c9d2e0;border-radius:10px;padding:12px;font-family:inherit;font-size:15px" placeholder="- Too cluttered; one subject only&#10;- No people; use the still-life family instead"></textarea><div style="color:#667;font-size:13px;margin-top:10px">Apply with <code>python scripts/pipeline.py feedback --item page-home-hero</code>; whichever box is empty skips that revision.</div><div style="margin-top:12px;display:flex;gap:14px;align-items:center"><button id="bp-send-page-home-hero" style="background:#2563eb;color:#fff;border:0;border-radius:999px;padding:12px 22px;font-weight:700;cursor:pointer">Send feedback</button><span id="bp-status-page-home-hero" style="color:#667;font-size:14px"></span></div></div><div style="border:2px dashed #2563eb;border-radius:14px;padding:24px;background:#f5f7fb;margin-bottom:18px"><div style="color:#2563eb;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:6px">Approve &amp; schedule</div><div style="color:#333;font-size:15px;margin-bottom:12px">Approve this item and set its target publish date. This queues it; it ships when you run <code>python scripts/pipeline.py publish-due</code> on or after that date (or <code>publish --item page-home-hero</code> now).</div><div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><label style="color:#667;font-size:14px">Publish date <input type="date" id="bp-date-page-home-hero" value="2026-07-09" style="background:#fff;color:#111;border:1px solid #c9d2e0;border-radius:8px;padding:8px 10px;font-family:inherit"></label><button id="bp-approve-page-home-hero" style="background:#111;color:#fff;border:0;border-radius:999px;padding:12px 22px;font-weight:700;cursor:pointer">Approve &amp; schedule</button><span id="bp-astatus-page-home-hero" style="color:#667;font-size:14px"></span></div></div></section><script>(function(){var id="page-home-hero";function post(url,body,el,ok){el.textContent="Saving...";fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}).then(function(r){return r.json();}).then(function(d){el.textContent=d.ok?ok(d):("Error: "+(d.error||"unknown"));}).catch(function(e){el.textContent="Error: "+e;});}var fb=document.getElementById("bp-fb-"+id),fbi=document.getElementById("bp-fbi-"+id),fs=document.getElementById("bp-status-"+id);document.getElementById("bp-send-"+id).addEventListener("click",function(){post("/api/feedback",{id:id,text:fb.value,image_text:fbi?fbi.value:""},fs,function(){return "Saved. Now run:  python scripts/pipeline.py feedback --item "+id;});});var dt=document.getElementById("bp-date-"+id),as=document.getElementById("bp-astatus-"+id);document.getElementById("bp-approve-"+id).addEventListener("click",function(){post("/api/approve",{id:id,date:dt.value},as,function(d){return "Approved for "+d.date+". Publish with:  python scripts/pipeline.py publish-due";});});})();</script>
+
+<section id="product-pressure" class="pg-section pg-problem">
+  <p class="pg-kicker">Product pressure</p>
+  <h2>The hard calls are still on the founder</h2>
+  <p class="pg-sub">The roadmap can look full. The AI demo can look real. The analytics can still leave the founder asking the only question that matters: what should the team build next?</p>
+  <div class="pg-grid">
+    <article class="pg-card">
+      <h3>Founder-owned product calls</h3>
+      <p>Ticket review keeps drifting back into strategy. Every backlog choice needs a founder's read on market timing and what the team can ship without losing the plot. A messy board is annoying. The real cost is the pause before the next slice gets chosen.</p>
+    </article>
+    <article class="pg-card">
+      <h3>AI demos without product shape</h3>
+      <p>A prototype can answer one narrow prompt and still be a long way from a product. The missing work is less flashy: trust boundaries, review rules, evaluation criteria, and release scope. Without that shape, users see a trick instead of a feature.</p>
+    </article>
+    <article class="pg-card">
+      <h3>Artifacts that do not change decisions</h3>
+      <p>Analytics and roadmap docs age fast when nobody trusts them at planning time. The useful version names the validation choice and shows whether the data fits the question. Then the team can decide what actually moves.</p>
+    </article>
+  </div>
+</section>
+
+
+<section class="bp-review-panel" style="max-width:780px;margin:0 auto 60px;padding:0 28px"><div style="border:2px dashed #2563eb;border-radius:14px;padding:24px;background:#f5f7fb;margin-bottom:18px"><div style="color:#2563eb;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:6px">Localhost review &middot; not part of the published page</div><div style="color:#333;font-size:15px;margin-bottom:12px"><strong>Content corrections</strong> (one per line) &mdash; saves to <code>drafts/page-home-product-pressure/feedback.md</code>. Leave empty if the writing is fine.</div><textarea id="bp-fb-page-home-product-pressure" rows="5" style="width:100%;box-sizing:border-box;background:#fff;color:#111;border:1px solid #c9d2e0;border-radius:10px;padding:12px;font-family:inherit;font-size:15px" placeholder="- Lead with the key stat&#10;- Cut the salesy sentence&#10;- Use the linked report as the second source"></textarea><div style="color:#667;font-size:13px;margin:14px 0 0">This section has no image in the contract. To add one, set its visual in product/handoff.json and rebuild the section.</div><div style="color:#667;font-size:13px;margin-top:10px">Apply with <code>python scripts/pipeline.py feedback --item page-home-product-pressure</code>; whichever box is empty skips that revision.</div><div style="margin-top:12px;display:flex;gap:14px;align-items:center"><button id="bp-send-page-home-product-pressure" style="background:#2563eb;color:#fff;border:0;border-radius:999px;padding:12px 22px;font-weight:700;cursor:pointer">Send feedback</button><span id="bp-status-page-home-product-pressure" style="color:#667;font-size:14px"></span></div></div><div style="border:2px dashed #2563eb;border-radius:14px;padding:24px;background:#f5f7fb;margin-bottom:18px"><div style="color:#2563eb;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:6px">Approve &amp; schedule</div><div style="color:#333;font-size:15px;margin-bottom:12px">Approve this item and set its target publish date. This queues it; it ships when you run <code>python scripts/pipeline.py publish-due</code> on or after that date (or <code>publish --item page-home-product-pressure</code> now).</div><div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><label style="color:#667;font-size:14px">Publish date <input type="date" id="bp-date-page-home-product-pressure" value="2026-07-09" style="background:#fff;color:#111;border:1px solid #c9d2e0;border-radius:8px;padding:8px 10px;font-family:inherit"></label><button id="bp-approve-page-home-product-pressure" style="background:#111;color:#fff;border:0;border-radius:999px;padding:12px 22px;font-weight:700;cursor:pointer">Approve &amp; schedule</button><span id="bp-astatus-page-home-product-pressure" style="color:#667;font-size:14px"></span></div></div></section><script>(function(){var id="page-home-product-pressure";function post(url,body,el,ok){el.textContent="Saving...";fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}).then(function(r){return r.json();}).then(function(d){el.textContent=d.ok?ok(d):("Error: "+(d.error||"unknown"));}).catch(function(e){el.textContent="Error: "+e;});}var fb=document.getElementById("bp-fb-"+id),fbi=document.getElementById("bp-fbi-"+id),fs=document.getElementById("bp-status-"+id);document.getElementById("bp-send-"+id).addEventListener("click",function(){post("/api/feedback",{id:id,text:fb.value,image_text:fbi?fbi.value:""},fs,function(){return "Saved. Now run:  python scripts/pipeline.py feedback --item "+id;});});var dt=document.getElementById("bp-date-"+id),as=document.getElementById("bp-astatus-"+id);document.getElementById("bp-approve-"+id).addEventListener("click",function(){post("/api/approve",{id:id,date:dt.value},as,function(d){return "Approved for "+d.date+". Publish with:  python scripts/pipeline.py publish-due";});});})();</script>
+
+<section id="engagement-shapes" class="pg-section pg-offerings">
+  <p class="pg-kicker">Engagement shapes</p>
+  <h2>Common ways to bring in senior product help</h2>
+  <p class="pg-sub">Sometimes the missing piece is a product leader for a season. Sometimes it is a tighter AI bet or a hard implementation call. For repeat-use products, the missing piece can be engagement-system judgment before the roadmap hardens.</p>
+  <div class="pg-grid pg-grid-two">
+    <div class="pg-card">
+      <h3>Fractional product leadership</h3>
+      <p>For founder-owned product calls, Edgecaser can sit in the senior product chair for a defined period. The work needs real decision authority; if the ask is design staffing or build tickets with no product mandate, it is the wrong fit.</p>
+    </div>
+    <div class="pg-card">
+      <h3>AI product sprints</h3>
+      <p>For an AI demo stuck between prototype and product, the sprint keeps the question small. What should ship? What should wait? Which decision is still missing? The right answer is often a smaller scope instead of a bigger tool.</p>
+    </div>
+    <div class="pg-card">
+      <h3>AI implementation guidance</h3>
+      <p>For teams deciding where AI belongs in a workflow, the guidance stays advisory and tied to product judgment. Edgecaser does not take on implementation work that has been separated from product decisions.</p>
+    </div>
+    <div class="pg-card">
+      <h3>Engagement systems depth</h3>
+      <p>For products that depend on repeat use, Ian can bring experience from games, live operations, consumer UX, motivation loops, progression, incentives, and economy design. That experience belongs in service of product work. Gamification is not the offer.</p>
+    </div>
+  </div>
+  <p class="pg-quote">The fit question is simple: which kind of senior product help will make the next decision clearer?</p>
+</section>
+
+
+<section class="bp-review-panel" style="max-width:780px;margin:0 auto 60px;padding:0 28px"><div style="border:2px dashed #2563eb;border-radius:14px;padding:24px;background:#f5f7fb;margin-bottom:18px"><div style="color:#2563eb;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:6px">Localhost review &middot; not part of the published page</div><div style="color:#333;font-size:15px;margin-bottom:12px"><strong>Content corrections</strong> (one per line) &mdash; saves to <code>drafts/page-home-engagement-shapes/feedback.md</code>. Leave empty if the writing is fine.</div><textarea id="bp-fb-page-home-engagement-shapes" rows="5" style="width:100%;box-sizing:border-box;background:#fff;color:#111;border:1px solid #c9d2e0;border-radius:10px;padding:12px;font-family:inherit;font-size:15px" placeholder="- Lead with the key stat&#10;- Cut the salesy sentence&#10;- Use the linked report as the second source"></textarea><div style="color:#667;font-size:13px;margin:14px 0 0">This section has no image in the contract. To add one, set its visual in product/handoff.json and rebuild the section.</div><div style="color:#667;font-size:13px;margin-top:10px">Apply with <code>python scripts/pipeline.py feedback --item page-home-engagement-shapes</code>; whichever box is empty skips that revision.</div><div style="margin-top:12px;display:flex;gap:14px;align-items:center"><button id="bp-send-page-home-engagement-shapes" style="background:#2563eb;color:#fff;border:0;border-radius:999px;padding:12px 22px;font-weight:700;cursor:pointer">Send feedback</button><span id="bp-status-page-home-engagement-shapes" style="color:#667;font-size:14px"></span></div></div><div style="border:2px dashed #2563eb;border-radius:14px;padding:24px;background:#f5f7fb;margin-bottom:18px"><div style="color:#2563eb;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:6px">Approve &amp; schedule</div><div style="color:#333;font-size:15px;margin-bottom:12px">Approve this item and set its target publish date. This queues it; it ships when you run <code>python scripts/pipeline.py publish-due</code> on or after that date (or <code>publish --item page-home-engagement-shapes</code> now).</div><div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><label style="color:#667;font-size:14px">Publish date <input type="date" id="bp-date-page-home-engagement-shapes" value="2026-07-09" style="background:#fff;color:#111;border:1px solid #c9d2e0;border-radius:8px;padding:8px 10px;font-family:inherit"></label><button id="bp-approve-page-home-engagement-shapes" style="background:#111;color:#fff;border:0;border-radius:999px;padding:12px 22px;font-weight:700;cursor:pointer">Approve &amp; schedule</button><span id="bp-astatus-page-home-engagement-shapes" style="color:#667;font-size:14px"></span></div></div></section><script>(function(){var id="page-home-engagement-shapes";function post(url,body,el,ok){el.textContent="Saving...";fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}).then(function(r){return r.json();}).then(function(d){el.textContent=d.ok?ok(d):("Error: "+(d.error||"unknown"));}).catch(function(e){el.textContent="Error: "+e;});}var fb=document.getElementById("bp-fb-"+id),fbi=document.getElementById("bp-fbi-"+id),fs=document.getElementById("bp-status-"+id);document.getElementById("bp-send-"+id).addEventListener("click",function(){post("/api/feedback",{id:id,text:fb.value,image_text:fbi?fbi.value:""},fs,function(){return "Saved. Now run:  python scripts/pipeline.py feedback --item "+id;});});var dt=document.getElementById("bp-date-"+id),as=document.getElementById("bp-astatus-"+id);document.getElementById("bp-approve-"+id).addEventListener("click",function(){post("/api/approve",{id:id,date:dt.value},as,function(d){return "Approved for "+d.date+". Publish with:  python scripts/pipeline.py publish-due";});});})();</script>
+
+<section id="trust-teaser" class="pg-section pg-trust">
+  <p class="pg-kicker">Trust signals</p>
+  <h2>What to expect</h2>
+  <p class="pg-sub">You should know who is doing the work, how the first step works, and what information stays private before you book a call.</p>
+  <div class="pg-grid">
+    <div class="pg-card">
+      <h3>Founder-led product judgment</h3>
+      <p>Ian Brillembourg brings 15+ years across product leadership, AI, data, mobile, consumer UX, early-stage companies, and game systems. That operating range matters more than a borrowed endorsement.</p>
+    </div>
+    <div class="pg-card">
+      <h3>A visible first step</h3>
+      <p>The first move is practical: a product fit call, current goals, working artifacts, and a read on the decision pressure. Then the scope gets named as fractional, sprint, or advisory, with a first 2 to 4 week plan.</p>
+    </div>
+    <div class="pg-card">
+      <h3>Constraints stay public</h3>
+      <p>Public materials use cleared facts only. Private roadmaps, dashboards, datasets, PHI, confidential artifacts, and client screenshots stay in the working room.</p>
+    </div>
+  </div>
+  <p class="pg-quote">Bring the product problem, the artifacts you already have, and the decisions that are stuck. The first call should make the next step clearer.</p>
+</section>
+
+
+<section class="bp-review-panel" style="max-width:780px;margin:0 auto 60px;padding:0 28px"><div style="border:2px dashed #2563eb;border-radius:14px;padding:24px;background:#f5f7fb;margin-bottom:18px"><div style="color:#2563eb;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:6px">Localhost review &middot; not part of the published page</div><div style="color:#333;font-size:15px;margin-bottom:12px"><strong>Content corrections</strong> (one per line) &mdash; saves to <code>drafts/page-home-trust-teaser/feedback.md</code>. Leave empty if the writing is fine.</div><textarea id="bp-fb-page-home-trust-teaser" rows="5" style="width:100%;box-sizing:border-box;background:#fff;color:#111;border:1px solid #c9d2e0;border-radius:10px;padding:12px;font-family:inherit;font-size:15px" placeholder="- Lead with the key stat&#10;- Cut the salesy sentence&#10;- Use the linked report as the second source"></textarea><div style="color:#667;font-size:13px;margin:14px 0 0">This section has no image in the contract. To add one, set its visual in product/handoff.json and rebuild the section.</div><div style="color:#667;font-size:13px;margin-top:10px">Apply with <code>python scripts/pipeline.py feedback --item page-home-trust-teaser</code>; whichever box is empty skips that revision.</div><div style="margin-top:12px;display:flex;gap:14px;align-items:center"><button id="bp-send-page-home-trust-teaser" style="background:#2563eb;color:#fff;border:0;border-radius:999px;padding:12px 22px;font-weight:700;cursor:pointer">Send feedback</button><span id="bp-status-page-home-trust-teaser" style="color:#667;font-size:14px"></span></div></div><div style="border:2px dashed #2563eb;border-radius:14px;padding:24px;background:#f5f7fb;margin-bottom:18px"><div style="color:#2563eb;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:6px">Approve &amp; schedule</div><div style="color:#333;font-size:15px;margin-bottom:12px">Approve this item and set its target publish date. This queues it; it ships when you run <code>python scripts/pipeline.py publish-due</code> on or after that date (or <code>publish --item page-home-trust-teaser</code> now).</div><div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><label style="color:#667;font-size:14px">Publish date <input type="date" id="bp-date-page-home-trust-teaser" value="2026-07-09" style="background:#fff;color:#111;border:1px solid #c9d2e0;border-radius:8px;padding:8px 10px;font-family:inherit"></label><button id="bp-approve-page-home-trust-teaser" style="background:#111;color:#fff;border:0;border-radius:999px;padding:12px 22px;font-weight:700;cursor:pointer">Approve &amp; schedule</button><span id="bp-astatus-page-home-trust-teaser" style="color:#667;font-size:14px"></span></div></div></section><script>(function(){var id="page-home-trust-teaser";function post(url,body,el,ok){el.textContent="Saving...";fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}).then(function(r){return r.json();}).then(function(d){el.textContent=d.ok?ok(d):("Error: "+(d.error||"unknown"));}).catch(function(e){el.textContent="Error: "+e;});}var fb=document.getElementById("bp-fb-"+id),fbi=document.getElementById("bp-fbi-"+id),fs=document.getElementById("bp-status-"+id);document.getElementById("bp-send-"+id).addEventListener("click",function(){post("/api/feedback",{id:id,text:fb.value,image_text:fbi?fbi.value:""},fs,function(){return "Saved. Now run:  python scripts/pipeline.py feedback --item "+id;});});var dt=document.getElementById("bp-date-"+id),as=document.getElementById("bp-astatus-"+id);document.getElementById("bp-approve-"+id).addEventListener("click",function(){post("/api/approve",{id:id,date:dt.value},as,function(d){return "Approved for "+d.date+". Publish with:  python scripts/pipeline.py publish-due";});});})();</script>
+
+<section id="final-cta" class="pg-section pg-final-cta">
+  <p class="pg-kicker">Next step</p>
+  <h2>Bring the product decision that is stuck</h2>
+  <p class="pg-sub">Use the 30-minute call with Ian Brillembourg to put the real pressure on the table. Maybe it needs fractional leadership, a focused sprint, a product review, team process work, implementation guidance, or a smaller advisory lane. The first conversation should turn the next 2 to 4 weeks into a scoping plan you can actually judge.</p>
+  <div class="pg-cta">
+    <a class="pg-btn" href="/EdgecaserLLC-site/contact#capture">Book a 30-minute product fit call</a>
+  </div>
+</section>
+
+
+<section class="bp-review-panel" style="max-width:780px;margin:0 auto 60px;padding:0 28px"><div style="border:2px dashed #2563eb;border-radius:14px;padding:24px;background:#f5f7fb;margin-bottom:18px"><div style="color:#2563eb;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:6px">Localhost review &middot; not part of the published page</div><div style="color:#333;font-size:15px;margin-bottom:12px"><strong>Content corrections</strong> (one per line) &mdash; saves to <code>drafts/page-home-final-cta/feedback.md</code>. Leave empty if the writing is fine.</div><textarea id="bp-fb-page-home-final-cta" rows="5" style="width:100%;box-sizing:border-box;background:#fff;color:#111;border:1px solid #c9d2e0;border-radius:10px;padding:12px;font-family:inherit;font-size:15px" placeholder="- Lead with the key stat&#10;- Cut the salesy sentence&#10;- Use the linked report as the second source"></textarea><div style="color:#667;font-size:13px;margin:14px 0 0">This section has no image in the contract. To add one, set its visual in product/handoff.json and rebuild the section.</div><div style="color:#667;font-size:13px;margin-top:10px">Apply with <code>python scripts/pipeline.py feedback --item page-home-final-cta</code>; whichever box is empty skips that revision.</div><div style="margin-top:12px;display:flex;gap:14px;align-items:center"><button id="bp-send-page-home-final-cta" style="background:#2563eb;color:#fff;border:0;border-radius:999px;padding:12px 22px;font-weight:700;cursor:pointer">Send feedback</button><span id="bp-status-page-home-final-cta" style="color:#667;font-size:14px"></span></div></div><div style="border:2px dashed #2563eb;border-radius:14px;padding:24px;background:#f5f7fb;margin-bottom:18px"><div style="color:#2563eb;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:6px">Approve &amp; schedule</div><div style="color:#333;font-size:15px;margin-bottom:12px">Approve this item and set its target publish date. This queues it; it ships when you run <code>python scripts/pipeline.py publish-due</code> on or after that date (or <code>publish --item page-home-final-cta</code> now).</div><div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><label style="color:#667;font-size:14px">Publish date <input type="date" id="bp-date-page-home-final-cta" value="2026-07-09" style="background:#fff;color:#111;border:1px solid #c9d2e0;border-radius:8px;padding:8px 10px;font-family:inherit"></label><button id="bp-approve-page-home-final-cta" style="background:#111;color:#fff;border:0;border-radius:999px;padding:12px 22px;font-weight:700;cursor:pointer">Approve &amp; schedule</button><span id="bp-astatus-page-home-final-cta" style="color:#667;font-size:14px"></span></div></div></section><script>(function(){var id="page-home-final-cta";function post(url,body,el,ok){el.textContent="Saving...";fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}).then(function(r){return r.json();}).then(function(d){el.textContent=d.ok?ok(d):("Error: "+(d.error||"unknown"));}).catch(function(e){el.textContent="Error: "+e;});}var fb=document.getElementById("bp-fb-"+id),fbi=document.getElementById("bp-fbi-"+id),fs=document.getElementById("bp-status-"+id);document.getElementById("bp-send-"+id).addEventListener("click",function(){post("/api/feedback",{id:id,text:fb.value,image_text:fbi?fbi.value:""},fs,function(){return "Saved. Now run:  python scripts/pipeline.py feedback --item "+id;});});var dt=document.getElementById("bp-date-"+id),as=document.getElementById("bp-astatus-"+id);document.getElementById("bp-approve-"+id).addEventListener("click",function(){post("/api/approve",{id:id,date:dt.value},as,function(d){return "Approved for "+d.date+". Publish with:  python scripts/pipeline.py publish-due";});});})();</script>
+
+<div id="bp-sitefb" class="bp-review-panel" style="position:fixed;left:18px;bottom:18px;z-index:9999;width:340px;max-width:calc(100vw - 36px);font-family:system-ui,Arial,sans-serif"><button id="bp-sitefb-toggle" style="background:#0b6e4a;color:#fff;border:0;border-radius:999px;padding:12px 18px;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 2px 10px rgba(16,24,40,.25)">Site-wide design feedback</button><div id="bp-sitefb-body" style="display:none;margin-top:10px;background:#fff;border:2px solid #0b6e4a;border-radius:14px;padding:16px;box-shadow:0 6px 24px rgba(16,24,40,.18)"><div style="color:#333;font-size:13px;margin-bottom:8px">Spacing, alignment, colors, buttons: anything that spans sections. Saves to <code>product/design-feedback.md</code>; applied to the shared template.</div><textarea id="bp-sitefb-text" rows="6" style="width:100%;box-sizing:border-box;background:#fff;color:#111;border:1px solid #c9d2e0;border-radius:10px;padding:10px;font-family:inherit;font-size:14px" placeholder="- Tighten the gap above each section heading&#10;- Make the two buttons the same width&#10;- Cards need more padding"></textarea><div style="margin-top:10px;display:flex;gap:10px;align-items:center"><button id="bp-sitefb-send" style="background:#0b6e4a;color:#fff;border:0;border-radius:999px;padding:10px 18px;font-weight:700;cursor:pointer">Send</button><span id="bp-sitefb-status" style="color:#667;font-size:13px"></span></div></div></div><script>(function(){var t=document.getElementById("bp-sitefb-toggle"),b=document.getElementById("bp-sitefb-body"),s=document.getElementById("bp-sitefb-status"),x=document.getElementById("bp-sitefb-text");t.addEventListener("click",function(){b.style.display=b.style.display==="none"?"block":"none";});document.getElementById("bp-sitefb-send").addEventListener("click",function(){s.textContent="Saving...";fetch("/api/site-feedback",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:x.value})}).then(function(r){return r.json();}).then(function(d){s.textContent=d.ok?"Saved. Run:  python scripts/pipeline.py design-feedback":("Error: "+(d.error||"unknown"));}).catch(function(e){s.textContent="Error: "+e;});});})();</script>
+
+<button id="bp-toggle" style="position:fixed;right:18px;bottom:18px;z-index:9999;background:#2563eb;color:#fff;border:0;border-radius:999px;padding:12px 20px;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 2px 10px rgba(16,24,40,.25);font-family:system-ui,Arial,sans-serif"></button><script>(function(){var KEY="bpReviewHidden";var btn=document.getElementById("bp-toggle");function apply(h){document.querySelectorAll(".bp-review-panel").forEach(function(el){el.style.display=h?"none":"";});btn.textContent=h?"Show review panels":"Preview as published";btn.style.background=h?"#111":"#2563eb";}var h=localStorage.getItem(KEY)==="1";apply(h);btn.addEventListener("click",function(){h=!h;localStorage.setItem(KEY,h?"1":"0");apply(h);});})();</script>
+</main>
+
+<footer class="pg-footer">
+  <div class="pg-inner">
+    <div>
+      <p>&copy; 2026 Edgecaser LLC. All rights reserved.</p>
+      <p>Fractional product leadership for complex technology founders</p>
+    </div>
+    <nav aria-label="Footer"><a href="/EdgecaserLLC-site/site/.preview-product-page-contact.html#book">Book a call</a><a href="/EdgecaserLLC-site/site/.preview-blog-index.html">Blog</a><a href="mailto:contact@edgecaser.com">Email</a><a href="https://www.linkedin.com/in/ianbrillembourg">LinkedIn</a></nav>
+  </div>
+</footer>
+
+<a class="pg-back-top" href="#top" aria-label="Back to top">&#8593;</a>
+
+</body>
+</html>
