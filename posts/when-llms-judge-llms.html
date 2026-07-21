@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>When LLMs Judge LLMs, Who Judges the Judges? | Edgecaser LLC</title>
+<meta name="description" content="I set out to build a harness that would let an AI act as a neutral judge. The tricky part was realizing the judge wasn't actually neutral.">
+<link rel="stylesheet" href="/EdgecaserLLC-site/assets/fonts/fonts.css">
+
+<style>
+:root{
+--bg:#FAF9F5;
+--surface:rgba(17,20,14,.04);
+--text:#11140E;
+--muted:rgba(17,20,14,.64);
+--line:rgba(17,20,14,.12);
+--accent:#34603F;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font-sans,Geist,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif);background:var(--bg);color:var(--text);line-height:1.7;}
+a{text-decoration:none;color:inherit;}
+.wrap{max-width:780px;margin:0 auto;padding:0 28px;}
+.pg-top{display:flex;justify-content:space-between;align-items:center;padding:22px max(28px, calc((100% - 980px) / 2));}
+.pg-top img{height:40px;display:block;}
+.pg-top nav a{margin-left:22px;text-decoration:none;color:var(--text);font-size:15px;}
+.pg-top nav a.pg-btn{color:var(--bg);}
+.pg-btn{display:inline-block;background:var(--text);color:var(--bg);text-decoration:none;border-radius:8px;padding:14px 28px;font-weight:600;font-size:16px;}
+.pg-btn:hover{background:#2B2F28;}
+.hero{padding:72px 0 36px;}
+.tag{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:8px 12px;color:var(--accent);font-family:var(--font-mono,"JetBrains Mono",ui-monospace,monospace);font-size:12px;letter-spacing:0;text-transform:uppercase;}
+.hero h1{font-size:48px;line-height:1.1;margin:18px 0 14px;font-weight:600;letter-spacing:0;}
+.hero .sub{font-size:21px;color:var(--muted);max-width:680px;}
+.meta{margin-top:18px;color:var(--muted);font-size:14px;}
+.meta a{color:var(--accent);}
+.divider{height:1px;background:var(--line);margin:30px 0 0;}
+.content{padding:50px 0 90px;}
+.content h2{font-size:30px;margin:44px 0 14px;}
+.content h3{font-size:22px;margin:30px 0 10px;}
+.content p{font-size:19px;color:rgba(17,20,14,.82);margin:0 0 22px;}
+.content ul{padding-left:24px;margin:10px 0 28px;}
+.content li{font-size:18px;color:rgba(17,20,14,.82);margin:8px 0;}
+.content a{color:var(--accent);}
+.content code{font-family:var(--font-mono,"JetBrains Mono",ui-monospace,monospace);font-size:.88em;background:var(--surface);padding:2px 6px;border-radius:4px;}
+.quote{margin:40px 0;padding:26px 30px;border-left:3px solid var(--accent);background:var(--surface);color:var(--text);font-size:22px;line-height:1.5;}
+.highlight{color:var(--accent);font-weight:700;}
+figure{margin:36px 0;}
+figure img{width:100%;border-radius:8px;border:1px solid var(--line);display:block;}
+figcaption{color:var(--muted);font-size:14px;margin-top:10px;text-align:center;}
+.cta{margin-top:64px;padding:38px;border-radius:8px;background:var(--text);color:var(--bg);}
+.cta h3{margin:0 0 12px;font-size:30px;line-height:1.12;}
+.cta p{color:rgba(250,249,245,.78);font-size:18px;}
+.btn{display:inline-block;margin-top:12px;background:var(--bg);color:var(--text);padding:13px 22px;border-radius:8px;font-weight:700;}
+.pg-footer{border-top:1px solid var(--line);color:var(--muted);font-size:14px;}
+.pg-footer .pg-inner{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:22px;padding:26px max(28px, calc((100% - 980px) / 2));}
+.pg-footer p{margin:0;color:var(--muted);}
+.pg-footer nav{display:flex;gap:16px;flex-wrap:wrap;justify-content:flex-end;}
+.pg-footer a{color:var(--text);text-decoration:none;}
+.pg-footer a:hover{text-decoration:underline;}
+img.heroimg{width:100%;border-radius:8px;margin:32px 0;border:1px solid var(--line);}
+@media(max-width:900px){.hero h1{font-size:40px}.content p,.content li{font-size:18px}}
+@media(max-width:600px){.hero h1{font-size:32px}.hero .sub{font-size:18px}.content h2{font-size:26px}.pg-top{flex-wrap:wrap;gap:10px}.pg-top img{height:36px}.pg-top nav{display:flex;flex-wrap:wrap;gap:8px 14px;width:100%}.pg-top nav a{margin-left:0;font-size:14px}.pg-footer nav{justify-content:flex-start}}
+</style>
+</head>
+
+<body>
+
+<header class="pg-top">
+<img src="/EdgecaserLLC-site/product-assets/00-edgecaser-08b-logo.png" alt="Edgecaser LLC logo">
+<nav><a href="/EdgecaserLLC-site/">Home</a><a href="/EdgecaserLLC-site/services.html">Services</a><a href="/EdgecaserLLC-site/use-cases.html">Use cases</a><a href="/EdgecaserLLC-site/about.html">About</a><a href="/EdgecaserLLC-site/blog/" aria-current="page">Blog</a><a class="pg-btn" href="/EdgecaserLLC-site/contact.html#book">Book a call</a></nav>
+</header>
+
+<section class="hero wrap">
+<span class="tag">LLM evaluation</span>
+<h1>When LLMs Judge LLMs, Who Judges the Judges?</h1>
+<p class="sub">I set out to build a harness that would let an AI act as a neutral judge. Along the way, I stumbled onto family biases, disagreements that stuck around even after careful checks — and, unexpectedly, a much trickier question than just "which model is best?"</p>
+<div class="meta">Edgecaser LLC &middot; 8 min read &middot; Originally published on <a href="https://medium.com/@edgecaser/when-llms-judge-llms-who-judges-the-judges-743f941afabb">Medium</a>, April 15, 2026</div>
+<div class="divider"></div>
+</section>
+
+<main class="content wrap">
+
+<img class="heroimg" src="assets/when-llms-judge-llms.png" alt="Three brass balance scales side by side on a cream background, each tilted a different way.">
+
+<h2>The moment the whole thing got weird</h2>
+<p>I've been tinkering with Shipwright, an open-source toolkit for PM agents. Lately, I got curious: how would the major models handle the same set of questions? I wanted a way to compare their outputs without having to judge every result by hand.</p>
+<p>So I needed some kind of judge I could trust — or at least poke at. Something that could look at two artifacts, score them using a rubric, and help me figure out which one actually came out ahead.</p>
+<p>I thought the hard part would be building that harness. It turned out, it wasn't. The tricky part was realizing that the judge wasn't actually neutral.</p>
+<p>I gave Claude and GPT the same 13 debates to judge. These were a mix of real-world cases from my career, current-day scenarios, and a couple of famous HBR cases. Same arguments. Same rubric. Same prompt. Same effort level.</p>
+<p>Claude picked side B in 9 out of 13 debates. GPT picked side A in 8 out of 13 debates. That didn't feel like random noise. It felt like I'd accidentally discovered that my "referee" had an opinion of its own.</p>
+<p>I'm a biologist-turned-PM, so when something feels off, my first instinct is to run some controls.</p>
+
+<h2>A concrete example</h2>
+<p>One of the most revealing cases in the set was a scenario called handoff-contradiction.</p>
+<p>The artifact was designed to stress contradiction handling: missing context, conflicting signals, and ambiguity about what was actually known versus inferred.</p>
+<p>When I later ran an artifact-matched three-family replay on the exact same frozen inputs:</p>
+<ul>
+<li>Claude named <code>evidence_discipline</code> as decisive</li>
+<li>GPT also named <code>evidence_discipline</code></li>
+<li>Gemini named <code>decision_usefulness</code></li>
+</ul>
+<p>That's when the bigger picture started to come into focus. I realized I wasn't just comparing outputs — I was seeing different, often hidden, ideas of what actually makes a good artifact.</p>
+
+<h2>What I was building</h2>
+<p>I'm building an open-source PM agent toolkit called Shipwright (MIT). One part of it is a cross-model conflict harness: a structured debate where two model families produce competing artifacts through four rounds:</p>
+<ul>
+<li><code>first_pass</code></li>
+<li><code>rebuttal</code></li>
+<li><code>final</code></li>
+<li><code>judge</code></li>
+</ul>
+<p>The debating sides are blinded to each other's identity. A third model then judges the final artifacts against a five-dimensional rubric:</p>
+<ul>
+<li>claim quality</li>
+<li>evidence discipline</li>
+<li>responsiveness to critique</li>
+<li>internal consistency</li>
+<li>decision usefulness</li>
+</ul>
+<p>The goal wasn't to crown a universal winner. It was to ask whether cross-family judging is stable, fair, and auditable when repeated.</p>
+<p>That matters because "LLM-as-judge" is quietly becoming default infrastructure in agent evals, artifact review, ranking pipelines, and product decision systems. Most of us behave as if the judge is a neutral referee.</p>
+<p>But it's not.</p>
+
+<h2>The controls I wanted before believing anything</h2>
+<p>I didn't want to over-interpret a flashy first result, so I tried to rule out the obvious confounds.</p>
+<h3>1. Frozen-artifact replay</h3>
+<p>Early runs mixed together two very different sources of variance:</p>
+<ul>
+<li>the debating sides generated different arguments each run</li>
+<li>the judges scored differently each run</li>
+</ul>
+<p>That made it impossible to tell what I was actually measuring.</p>
+<p>So I built a replay path that takes a completed run, freezes every artifact, and runs a new judge against the exact same saved <code>verdict.prompt.txt</code> and <code>verdict.input.json</code>.</p>
+<p>From that point on, any variance is judge effect, not generation effect.</p>
+<h3>2. Artifact-matched three-family comparison</h3>
+<p>I picked five scenarios and made Claude, GPT, and Gemini judge the exact same frozen artifact bundle.</p>
+<p>That let me compare judge families without side-generation drift.</p>
+<h3>3. Repeatability study</h3>
+<p>I ran Gemini 5x on the same frozen artifacts for three contradiction-heavy scenarios so I could separate one-shot weirdness from stable house style.</p>
+<h3>4. Rationale inspection</h3>
+<p>I extended the verdict schema so judges had to produce:</p>
+<ul>
+<li>per-dimension rationales</li>
+<li>side summaries</li>
+<li>a named <code>decisive_dimension</code></li>
+<li>confidence</li>
+<li><code>needs_human_review</code></li>
+</ul>
+<p>That made the reasoning legible, not just the final verdict.</p>
+
+<h2>What showed up</h2>
+<h3>1. Claude and GPT lean in opposite directions</h3>
+
+<figure>
+<img src="assets/llm-judges-decisions-per-model.png" alt="Table of judge decisions per model: Claude picked side A twice, side B nine times, with two ties. GPT picked side A eight times, side B five times, no ties. Gemini picked side A six times, side B four times, with three ties.">
+<figcaption>Decisions made per model</figcaption>
+</figure>
+
+<p>Two frontier judges, same debates, opposite directional lean.</p>
+<p>That doesn't mean either model is useless. But it does mean neither one should be treated as an unbiased solo judge.</p>
+<h3>2. Gemini is genuinely distinct, not redundant</h3>
+<p>Gemini dissents from both Claude and GPT in 6/13 scenarios. It produces more ties, more low-confidence calls, and more <code>needs_human_review</code> flags.</p>
+<p>That's valuable. It means Gemini is not just echoing one of the other judge families.</p>
+<p>But that also means Gemini isn't just a simple "tiebreaker." It brings a different perspective, not necessarily a quick answer.</p>
+<h3>3. The Gemini bias story got narrower under scrutiny</h3>
+<p>At first glance, Gemini appeared to have a broad house-style bias toward <code>decision_usefulness</code>. On the full replay pass, it chose that as the decisive dimension in 10 of 13 cases.</p>
+<p>That looked suspicious. But once I ran the repeatability study, the story got more specific.</p>
+<p><strong>prd-hidden-scope-creep.</strong> Across 5 repeated frozen replays:</p>
+<ul>
+<li>winner was stable: side_b in 5/5</li>
+<li>decisive dimension split: evidence_discipline 3/5, decision_usefulness 2/5</li>
+</ul>
+<p>So this case does not support the strongest version of the bias story.</p>
+<p><strong>event-automation-boundary.</strong> Across 5 repeated frozen replays:</p>
+<ul>
+<li>winner was stable: side_a in 5/5</li>
+<li>decisive dimension varied across responsiveness_to_critique, decision_usefulness, and evidence_discipline</li>
+</ul>
+<p>So this also isn't a clean "Gemini always collapses to usefulness" case.</p>
+<p><strong>handoff-contradiction.</strong> This is the one that held up. Across 5 repeated Gemini replays:</p>
+<ul>
+<li>winner: side_b 4/5, side_a 1/5</li>
+<li>decisive dimension: decision_usefulness 4/5, evidence_discipline 1/5</li>
+</ul>
+<p>And in the artifact-matched three-family comparison on the same frozen bundle:</p>
+<ul>
+<li>Claude chose evidence_discipline</li>
+<li>GPT chose evidence_discipline</li>
+<li>Gemini usually chose decision_usefulness</li>
+</ul>
+<p>So the strongest current conclusion is:</p>
+<p>Gemini does not show a universal usefulness bias across all cases, but it does show a stable usefulness-led tendency on at least one important contradiction case.</p>
+<p>That's a much narrower — and more useful — claim than the sweeping bias story I started with.</p>
+<h3>4. Some of the Gemini skew appears to be selection-layer bias</h3>
+<p>When I inspected the per-dimension rationales, Gemini often did reason sensibly about evidence discipline and internal consistency.</p>
+<p>In handoff-contradiction, for example, Gemini acknowledged the evidence-discipline tension clearly. But it still named <code>decision_usefulness</code> as decisive.</p>
+<p>That suggests a narrower problem than "Gemini can't reason about evidence issues."</p>
+<p>The more plausible interpretation is:</p>
+<ul>
+<li>underlying rubric reasoning can be sound</li>
+<li>the final <code>decisive_dimension</code> selection step can still skew toward usefulness</li>
+</ul>
+<p>That's interesting because it means some of the failure may be in the final labeling step, not the whole reasoning process.</p>
+<h3>5. The operational caveat: Gemini required repair every time</h3>
+<p>This part matters a lot if you're thinking about production use.</p>
+<p>All 13/13 Gemini replay verdicts in the richer schema path required one repair pass before becoming schema-valid JSON.</p>
+<p>That means:</p>
+<ul>
+<li>the substantive verdicts are often useful</li>
+<li>the raw first-pass outputs are not production-clean</li>
+</ul>
+<p>So while Gemini is definitely interesting from an analysis standpoint, needing to fix its output every time makes it a tough pick as a default judge right now.</p>
+
+<h2>What I changed my mind about</h2>
+<p>At one point I thought Gemini might be the best default single judge because it was the most willing to abstain, tie, and surface uncertainty.</p>
+<p>After more testing, I changed my mind.</p>
+<p>If I had to pick a default solo runtime judge today, I would choose GPT.</p>
+<p>Not because GPT is unbiased — it isn't.</p>
+<p>I would choose it because:</p>
+<ul>
+<li>it is more operationally reliable than Gemini</li>
+<li>it surfaces review flags more often than Claude</li>
+<li>it is less dangerous than a more overconfident solo judge</li>
+</ul>
+<p>So here's where I've landed for now:</p>
+<ul>
+<li><strong>Default single runtime judge:</strong> GPT</li>
+<li><strong>Default two-judge contrast panel:</strong> Claude + GPT</li>
+<li><strong>Default triple panel:</strong> Claude + GPT + Gemini</li>
+<li><strong>Best use of Gemini:</strong> escalation judge, ambiguity detector, and third-family perspective when disagreement itself is informative</li>
+</ul>
+
+<h2>What this means for LLM-as-judge systems</h2>
+<p>Three things stood out after all the checks.</p>
+<h3>1. Don't use a single model family as a neutral arbiter</h3>
+<p>If your evaluation system is only one model family deep, it has a bias profile you probably can't see from the outside.</p>
+<h3>2. Triple-panel evaluation should be an escalation, not a default</h3>
+<p>Running three judges on everything is expensive and noisy.</p>
+<p>The better pattern is:</p>
+<ul>
+<li>one judge by default</li>
+<li>escalate to a second when confidence is low or the case is contradiction-heavy</li>
+<li>escalate to a triple panel only when disagreement itself is important signal</li>
+</ul>
+<h3>3. Ties should be routing events, not dead ends</h3>
+<p>A useful judge shouldn't stop at: "I can't decide."</p>
+<p>It should also say:</p>
+<ul>
+<li>what uncertainty blocked the verdict</li>
+<li>what evidence would help</li>
+<li>what question would most reduce uncertainty</li>
+<li>what next artifact would be more appropriate</li>
+</ul>
+<p>That pushes the verdict from "score" toward "workflow signal," which feels much more useful in practice.</p>
+
+<h2>What I'm not claiming</h2>
+<ul>
+<li>This is not proof of deep reasoning failure in any model family.</li>
+<li>The broader 13-scenario comparison is still at the scenario level, not perfectly artifact-matched row by row.</li>
+<li>Thirteen scenarios is a small sample. I see this more as useful directional evidence and a starting point for methodology and not a final benchmark.</li>
+</ul>
+
+<h2>Why I'm sharing it</h2>
+<p>Because I have a hunch a lot of us are building on LLM-as-judge assumptions we haven't really put to the test.</p>
+<p>The biggest thing this project gave me wasn't a ranking of models. It was a better question:</p>
+<div class="quote">What exactly is my judge optimizing for when it says one artifact is better than another?</div>
+<p>If you're building eval infrastructure, the frozen-artifact replay pattern may be worth stealing. It was the single most useful methodological move in the project.</p>
+<p>If you're using LLM judges in production, I'd strongly suggest:</p>
+<ul>
+<li>exposing disagreement</li>
+<li>carrying uncertainty forward</li>
+<li>and treating judges as inputs to orchestration, not oracle endpoints</li>
+</ul>
+<p>The harness, schemas, and the full correspondence where I argued through the methodology with Codex and Claude are all in the repo. I kept the memos because I wanted the conclusions to be inspectable, including the parts where the story got narrower or changed.</p>
+<p>Shipwright is MIT-licensed. If you think my method is off, I'd honestly rather hear about it than hold on to a flattering result.</p>
+<p>Repo: <a href="https://github.com/EdgeCaser/shipwright">github.com/EdgeCaser/shipwright</a><br>
+Review correspondence: <code>docs/review/</code> on the <code>codex/cross-model-debate-harness-spec</code> branch</p>
+
+<div class="cta">
+<h3>Relying on an LLM judge somewhere in your product?</h3>
+<p>If model evaluation is quietly load-bearing in your pipeline, Edgecaser can help you check what the judge is actually optimizing for before you build on the verdicts.</p>
+<a class="btn" href="/EdgecaserLLC-site/contact.html#book">Let's talk about your product</a>
+</div>
+
+</main>
+
+<footer class="pg-footer">
+<div class="pg-inner">
+<p>&copy; Edgecaser LLC</p>
+<nav aria-label="Footer"><a href="/EdgecaserLLC-site/contact.html#book">Book a call</a><a href="/EdgecaserLLC-site/blog/">Blog</a><a href="mailto:contact@edgecaser.com">Email</a><a href="https://www.linkedin.com/in/ianbrillembourg">LinkedIn</a></nav>
+</div>
+</footer>
+
+</body>
+</html>

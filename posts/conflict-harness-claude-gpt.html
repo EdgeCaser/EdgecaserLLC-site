@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I Built a Conflict Harness to Compare Claude and GPT. The Hardest Part Was Trusting the Judge. | Edgecaser LLC</title>
+<meta name="description" content="A harness that compares Claude and GPT on real PM scenarios, and the swap-testing methodology that separates real quality differences from judge bias.">
+<link rel="stylesheet" href="/EdgecaserLLC-site/assets/fonts/fonts.css">
+
+<style>
+:root{
+--bg:#FAF9F5;
+--surface:rgba(17,20,14,.04);
+--text:#11140E;
+--muted:rgba(17,20,14,.64);
+--line:rgba(17,20,14,.12);
+--accent:#34603F;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font-sans,Geist,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif);background:var(--bg);color:var(--text);line-height:1.7;}
+a{text-decoration:none;color:inherit;}
+.wrap{max-width:780px;margin:0 auto;padding:0 28px;}
+.pg-top{display:flex;justify-content:space-between;align-items:center;padding:22px max(28px, calc((100% - 980px) / 2));}
+.pg-top img{height:40px;display:block;}
+.pg-top nav a{margin-left:22px;text-decoration:none;color:var(--text);font-size:15px;}
+.pg-top nav a.pg-btn{color:var(--bg);}
+.pg-btn{display:inline-block;background:var(--text);color:var(--bg);text-decoration:none;border-radius:8px;padding:14px 28px;font-weight:600;font-size:16px;}
+.pg-btn:hover{background:#2B2F28;}
+.hero{padding:72px 0 36px;}
+.tag{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:8px 12px;color:var(--accent);font-family:var(--font-mono,"JetBrains Mono",ui-monospace,monospace);font-size:12px;letter-spacing:0;text-transform:uppercase;}
+.hero h1{font-size:48px;line-height:1.1;margin:18px 0 14px;font-weight:600;letter-spacing:0;}
+.hero .sub{font-size:21px;color:var(--muted);max-width:680px;}
+.meta{margin-top:18px;color:var(--muted);font-size:14px;}
+.meta a{color:var(--accent);}
+.divider{height:1px;background:var(--line);margin:30px 0 0;}
+.content{padding:50px 0 90px;}
+.content h2{font-size:30px;margin:44px 0 14px;}
+.content h3{font-size:22px;margin:30px 0 10px;}
+.content p{font-size:19px;color:rgba(17,20,14,.82);margin:0 0 22px;}
+.content ul{padding-left:24px;margin:10px 0 28px;}
+.content li{font-size:18px;color:rgba(17,20,14,.82);margin:8px 0;}
+.content a{color:var(--accent);}
+.content code{font-family:var(--font-mono,"JetBrains Mono",ui-monospace,monospace);font-size:.88em;background:var(--surface);padding:2px 6px;border-radius:4px;}
+.quote{margin:40px 0;padding:26px 30px;border-left:3px solid var(--accent);background:var(--surface);color:var(--text);font-size:22px;line-height:1.5;}
+.highlight{color:var(--accent);font-weight:700;}
+figure{margin:36px 0;}
+figure img{width:100%;border-radius:8px;border:1px solid var(--line);display:block;}
+figcaption{color:var(--muted);font-size:14px;margin-top:10px;text-align:center;}
+.cta{margin-top:64px;padding:38px;border-radius:8px;background:var(--text);color:var(--bg);}
+.cta h3{margin:0 0 12px;font-size:30px;line-height:1.12;}
+.cta p{color:rgba(250,249,245,.78);font-size:18px;}
+.btn{display:inline-block;margin-top:12px;background:var(--bg);color:var(--text);padding:13px 22px;border-radius:8px;font-weight:700;}
+.pg-footer{border-top:1px solid var(--line);color:var(--muted);font-size:14px;}
+.pg-footer .pg-inner{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:22px;padding:26px max(28px, calc((100% - 980px) / 2));}
+.pg-footer p{margin:0;color:var(--muted);}
+.pg-footer nav{display:flex;gap:16px;flex-wrap:wrap;justify-content:flex-end;}
+.pg-footer a{color:var(--text);text-decoration:none;}
+.pg-footer a:hover{text-decoration:underline;}
+img.heroimg{width:100%;border-radius:8px;margin:32px 0;border:1px solid var(--line);}
+@media(max-width:900px){.hero h1{font-size:40px}.content p,.content li{font-size:18px}}
+@media(max-width:600px){.hero h1{font-size:32px}.hero .sub{font-size:18px}.content h2{font-size:26px}.pg-top{flex-wrap:wrap;gap:10px}.pg-top img{height:36px}.pg-top nav{display:flex;flex-wrap:wrap;gap:8px 14px;width:100%}.pg-top nav a{margin-left:0;font-size:14px}.pg-footer nav{justify-content:flex-start}}
+</style>
+</head>
+
+<body>
+
+<header class="pg-top">
+<img src="/EdgecaserLLC-site/product-assets/00-edgecaser-08b-logo.png" alt="Edgecaser LLC logo">
+<nav><a href="/EdgecaserLLC-site/">Home</a><a href="/EdgecaserLLC-site/services.html">Services</a><a href="/EdgecaserLLC-site/use-cases.html">Use cases</a><a href="/EdgecaserLLC-site/about.html">About</a><a href="/EdgecaserLLC-site/blog/" aria-current="page">Blog</a><a class="pg-btn" href="/EdgecaserLLC-site/contact.html#book">Book a call</a></nav>
+</header>
+
+<section class="hero wrap">
+<span class="tag">AI product judgment</span>
+<h1>I Built a Conflict Harness to Compare Claude and GPT. The Hardest Part Was Trusting the Judge.</h1>
+<p class="sub">I built a harness to compare Claude and GPT on real PM scenarios, then used swap-testing to separate real quality differences from judge bias.</p>
+<div class="meta">Edgecaser LLC &middot; 16 min read &middot; Originally published on <a href="https://www.linkedin.com/pulse/i-built-conflict-harness-compare-claude-gpt-hardest-ian-brillembourg-fkboc/">LinkedIn</a>, April 20, 2026</div>
+<div class="divider"></div>
+</section>
+
+<main class="content wrap">
+
+<img class="heroimg" src="assets/conflict-harness-claude-gpt.png" alt="A flat illustration of two figures seated across a table while a third figure between them holds up an unbalanced two-pan scale.">
+
+<h2>TL;DR</h2>
+<ul>
+<li>I built a harness to compare Claude and GPT on real PM scenarios, then used swap-testing to separate real quality differences from judge bias.</li>
+<li>The biggest methodological lesson is that you cannot trust a single AI judge at face value. Every judge family has a lean, so position-swapping is essential.</li>
+<li>In my corpus, Claude was strongest on ambiguous, constrained, and decision-heavy PM work. GPT was strongest on some evidence-disciplined and analogy-driven cases. In many standard PM scenarios, the difference did not matter much.</li>
+<li>The most useful output was often not the winner label. It was the uncertainty payload: what was missing, what needed verification, and what decision should wait for better evidence.</li>
+<li>The biggest caveat is that these systems are much better at reasoning structure than factual specificity. They often produce strong decision frames wrapped around invented numbers, thresholds, or citations.</li>
+</ul>
+
+<h2>It started with a simple problem</h2>
+<p>Product managers spend a lot of time producing artifacts such as PRDs, decision briefs, strategy memos, and escalation documents. The pitch for AI is straightforward: hand the AI your context and constraints, get a first draft in minutes instead of hours, then spend your time improving and deciding rather than writing.</p>
+<p>That pitch is real. I built Shipwright, an open-source PM toolkit, to make it more reliable. The problem with raw AI prompting is inconsistency. Ask the same question on different days and you can get different answers. Shipwright adds structure: standardized templates, pass/fail readiness gates, explicit evidence requirements, and forced decision frames. The result is less ceremony, but the ceremony that remains actually does something. Artifacts consistently show their work: what evidence was used, what is still unknown, and what decision needs to be made and by whom.</p>
+<p>Shipwright is a collection of 46 skills, 7 agents, and 17 chained workflows. Together they cover everything from discovery to PRD development to launch readiness. The open-source version works with a single AI model. You bring Claude, or GPT, or whatever model you have access to, and Shipwright imposes discipline on what it produces.</p>
+<p>That worked. But it surfaced a harder question.</p>
+
+<h2>The question I didn't know how to answer</h2>
+<p>Once Shipwright was producing consistently structured outputs, a different problem became visible: which model should you trust?</p>
+<p>Ask Claude and GPT the same strategic question, and you get different answers. The differences are often substantive, not superficial. Claude might recommend a 6-week validation sprint before committing to a build. GPT might recommend shipping a smaller scoped version now and iterating. Both answers can be internally consistent. Both can be well-reasoned. They are just not the same answer.</p>
+<p>The naive response is to run both and pick the one you agree with. But that is circular. You are just using the AI to confirm your existing instinct, which is not actually a decision-quality improvement.</p>
+<p>The more rigorous response is to ask a third model to evaluate both answers and pick the better one. I tried this. It didn't work.</p>
+<p>The problem: every model has a measurable preference for outputs that look like what it would have generated. Ask Claude to evaluate a Claude response versus a GPT response, and Claude will call its own output superior the overwhelming majority of the time. Ask GPT to judge between the two, and GPT does the same thing in the opposite direction. The "judge" model is not neutral.</p>
+<p>I started calling this the judge lean problem. And it's worse than it sounds.</p>
+
+<h2>The lean problem, measured</h2>
+<p>When I started systematically testing this, I found that model bias in judging is structural:</p>
+<p><strong>Claude-as-judge</strong> shows a near-total positional lean toward Side A: whichever artifact it reads first. In my runs, Claude called Side A the winner in every single Claude-judged scenario, including swap runs where Side A was GPT's output. That last detail matters: it means the lean is primarily positional, not stylistic. The plausible mechanism is that Claude heavily weights "decision usefulness" (pass/fail gates, named owners, immediately executable next steps) and Claude-authored artifacts tend to lead with exactly those features. But when position and style were separated by the swap test, position dominated. Claude voted for GPT's output when GPT was in the advantageous seat.</p>
+<p><strong>GPT-as-judge</strong> leans toward Side B at roughly 3x the rate it leans toward Side A. In 27 baseline runs, GPT called Side B the winner 14 times, Side A 5 times, and declared a tie 8 times. GPT's mechanism is different from Claude's: it tends to weight evidence discipline heavily, and it frequently calls ties or favors Side B in scenarios where Side A was more operationally specific but reached beyond the available evidence to get there.</p>
+<p><strong>Gemini-as-judge</strong>, the model I eventually used as the primary adjudicator, has a documented first-read positional lean of approximately 53%. Show it Response A and then Response B, and it marginally favors A. Show it B and then A, and it marginally favors B.</p>
+
+<figure>
+<img src="assets/conflict-harness-judge-lean.png" alt="Bar chart titled Judge Lean Signals In The Harness: Claude picked Side A in 6 observed runs, while GPT picked Side A 5 times, called 8 ties, and picked Side B 14 times.">
+<figcaption>Models show clearly different behaviors</figcaption>
+</figure>
+
+<p>In my tests, Claude, as judge, overwhelmingly favored Side A. GPT, as judge, favored Side B much more often than Side A and also produced a meaningful number of ties. Judge outputs are not neutral by default — you have to interpret them through the lean profile of the judge family.</p>
+<p>None of this reflects the actual quality of the answers. It reflects the fact that these models developed systematic preferences in training, and those preferences carry over into judging contexts. They encode views about what good reasoning looks like, what an actionable artifact looks like, and which position feels more aligned with the model's own instincts.</p>
+<p>The practical consequence: you cannot run two AI answers through a third AI judge and trust the verdict without controls. Not without knowing which direction the judge leans and designing your measurement to account for it.</p>
+
+<h2>Building controls: the harness</h2>
+<p>This is why I built ShipwrightPlus, a cross-model conflict harness that wraps the comparison with enough methodology to make the results interpretable.</p>
+<p>The key insight was borrowed from medicine: randomized position testing, plus a blinded third-family judge.</p>
+
+<figure>
+<img src="assets/conflict-harness-four-phases.png" alt="Flow diagram of the harness: the same case packet goes to Claude and GPT first passes, then a visible critique exchange, final revised artifacts, a third-family judge, an initial verdict, and a swap-sides rerun that ends in quality-confirmed, positional lean discard, or genuine tie or unresolved.">
+</figure>
+
+<p>The harness is not just "two models and a judge." It is a staged process that preserves independent first drafts, forces critique, then uses a swap rerun to separate real quality signals from position effects. Without the swap step, many apparent wins remain ambiguous.</p>
+<p><strong>Phase 1: Independent first pass.</strong> Claude and GPT both receive the same case packet: the scenario, the evidence, and the rubric for what a good artifact looks like. They work independently. Neither sees the other's response. Both produce a first-draft artifact, whether that is a PRD, a decision brief, or a strategy memo.</p>
+<p><strong>Phase 2: Rebuttal.</strong> Both models receive the other's artifact, labeled only as "Side A" or "Side B." Provider names are removed. Each model then produces a written critique identifying weaknesses in the other's argument.</p>
+<p><strong>Phase 3: Final revision.</strong> Each model can revise its own artifact once, incorporating or explicitly rebutting the critique it received.</p>
+<p><strong>Phase 4: Judgment.</strong> Gemini, a third model from a different company entirely, receives the full transcript. That includes both final artifacts and both critiques. It scores them on five dimensions: claim quality, evidence discipline, responsiveness to critique, internal consistency, and decision usefulness. Then it picks a winner or declares a tie.</p>
+<p>Artifacts are presented to the judge as "Side A" and "Side B" with provider names removed. But each model writes in a recognizable style, and a sophisticated judge may be able to infer which model generated which output from structural patterns and vocabulary alone. This is a real limit on the blinding — it is best-effort containment, not a guarantee.</p>
+<p>Even with best-effort blinding, Gemini's 53% first-read lean is a problem. If Claude is Side A and Gemini calls Side A the winner, that could be a real quality signal. It could also just be the lean at work.</p>
+<p>The solution: re-run the scenario with sides swapped. Claude becomes Side B, GPT becomes Side A. Same scenario, same judge, sides reversed.</p>
+
+<figure>
+<img src="assets/conflict-harness-swap-test.png" alt="Flowchart of the swap test: run one with Claude as Side A, judge verdict, run two with positions swapped, second verdict, then compare. Same model winning both positions is a quality signal, same side winning both times is positional lean, and collapse to tie is unresolved.">
+</figure>
+
+<p>The question is not just "who won?" The question is whether the winner travels with the model when positions reverse. If it does, that is evidence of quality. If it does not, the original result was probably positional.</p>
+<p>If Gemini still calls Claude the winner after Claude has been moved to Side B, that is a meaningful quality signal. In that case, the judge had to work against its own first-read preference to reach the verdict.</p>
+<p>If Gemini flips and now calls GPT the winner because GPT is now Side A, that means the original result was positional, not qualitative. The verdict gets discarded.</p>
+<p>I call a result that survives the position-swap test <strong>swap-confirmed</strong>. Only swap-confirmed results are treated as evidence of genuine quality difference.</p>
+
+<h2>What the data showed</h2>
+<p>I built a corpus of 80 scenarios across 8 scenario types. The scenarios came from a mix of real-life news events, HBR-style business cases, and situations drawn from my own years working in product management. The claims in this article come from swap-tested comparisons and, where noted, repeated-trial examples.</p>
+
+<figure>
+<img src="assets/conflict-harness-corpus.png" alt="Sankey diagram of 80 scenarios flowing into 38 raw apparent Claude wins, 41 raw ties, and 1 raw apparent GPT win, then into 30 confirmed Claude wins, 5 discarded lean artifacts, 31 unresolved, 4 confirmed GPT wins, and 10 confirmed genuine ties.">
+</figure>
+
+<p>I want to be clear here: I don't claim my findings to be statistically significant. Making hard determinations would require far more runs and expertise. I describe the results as directional tendencies rather than win rates, for reasons explained in the next section.</p>
+
+<figure>
+<img src="assets/conflict-harness-category-map.png" alt="Category map in two rows. Mixed or split by sub-type: historical strategy, evidence-fragile PRDs, stakeholder politics, live triage. Claude advantage: contradiction PRDs, executive ambiguity, metric gaming, customer comms.">
+<figcaption>This is NOT a leaderboard</figcaption>
+</figure>
+
+<p>The image above is a map of where the current corpus shows the clearest recurring Claude pattern and where results are mixed or split by sub-type. Four categories show a consistent Claude advantage: contradiction PRDs, executive ambiguity, metric gaming, and customer communications (3 of 4 swap-confirmed). Four categories remain mixed or sub-type dependent: historical strategy, evidence-fragile PRDs, stakeholder politics (slight Claude advantage: 6 of 9 confirmed Claude, 1 confirmed GPT), and live triage (confirmed wins for both models).</p>
+
+<h3>FINDING 1: Many scenarios don't cleanly discriminate, and that is informative</h3>
+<p>On a substantial share of scenarios, Claude and GPT produced artifacts that Gemini could not consistently distinguish, even after position-swap testing. In these cases, the models converged on similar quality but expressed it in different styles. The emphasis differed. The framing differed. But when scored on the dimensions that matter for PM decision-making, neither model had a reliable edge.</p>
+<p>This is useful information, not a null result. It tells you which scenario types discriminate between the models and which do not. When a scenario does not discriminate, you should stop worrying about model choice and focus instead on your prompts, your templates, and your evidence quality. That is exactly the layer Shipwright is designed to improve.</p>
+<p>The cases that do discriminate are worth understanding carefully, because they reveal something about how each model reasons differently.</p>
+
+<h3>FINDING 2: On specific scenario types, one model consistently outperforms the other</h3>
+<p>The swap-tested corpus suggests that model choice can matter across eight specific scenario types:</p>
+<p><strong>Where Claude tends to win:</strong> Scenarios involving genuine ambiguity. These include conflicting stakeholder demands, decisions where both options have legitimate support, evidence that is real but insufficient, and constraints that make the requested artifact impossible to deliver as specified. On these scenarios, Claude consistently produces what I came to call decision architecture. It names the evidence gap as the central problem rather than working around it, reframes binary choices into a menu of structured options with named tradeoffs, and proposes a concrete next artifact such as a validation brief, a decision gate memo, or a Pre-Commit Decision Document that moves the conversation forward.</p>
+<p><strong>Where GPT tends to win:</strong> Scenarios requiring deep historical analogy and scenarios involving quantitative survivorship-bias diagnosis. In these, GPT's tendency toward evidence discipline and calibrated uncertainty produces better outputs. GPT is more likely to stay within the evidence and less likely to reach beyond it. The four swap-confirmed GPT wins in the corpus are: meta-muse-spark (historical strategy analogy), pilot-survivorship-bias (quantitative survivorship-bias diagnosis), stakeholder-politics-ai-ownership (competing organizational priorities with a strong political dimension), and live-triage-data-pipeline-corruption (live triage where evidence discipline under pressure mattered more than decision architecture).</p>
+<p>The eight scenario types where model choice appears to matter:</p>
+<ul>
+<li>Executive ambiguity (conflicting leadership signals, no clear mandate)</li>
+<li>Contradiction or boundary PRDs (legal constraints, competing commitments, the requested feature is impossible as specified)</li>
+<li>Fragile evidence (decisions built on weak, proxied, or misinterpreted data)</li>
+<li>Historical strategy (what can analogous past decisions teach us)</li>
+<li>Incentive and metric gaming (a metric is winning but the underlying business is being harmed)</li>
+<li>Customer communication constraints (you can't say what you actually think)</li>
+<li>Stakeholder politics (two senior leaders want incompatible things)</li>
+<li>Live operational triage (production incident, launch at risk, decisions under time pressure)</li>
+</ul>
+<p>At this point, I think the clearest Claude signal is in contradiction or boundary PRDs, executive ambiguity, and incentive or metric-gaming scenarios. Customer communication constraints now show a consistent Claude advantage: three of four scenarios produced swap-confirmed Claude wins. Stakeholder politics has moved from mixed to a slight Claude advantage: six of nine scenarios produced swap-confirmed Claude wins, with one GPT win and two unresolved. GPT has confirmed advantages on historical strategy analogues and survivorship-bias diagnosis. Evidence-fragile PRDs remain mixed overall, because some scenarios reward GPT's evidence discipline while others reward Claude's decision structure. Live operational triage remains the most sub-type dependent: three scenarios produced confirmed Claude wins, but the category also contains a confirmed GPT win and two genuine parity results. The discrimination pattern within triage does not hold consistently across the category.</p>
+
+<h3>FINDING 3: The strongest claim in the corpus is built on repeated trials, not a single run</h3>
+<p>Before I get to the corpus-level pattern, it is worth naming the most defensible data point I have: the compliance-launch-speed scenario.</p>
+<p>This is a contradiction or boundary PRD scenario. A PM has been asked to produce a standard launch plan, but a compliance constraint makes the requested plan impossible as written. I ran this scenario three independent times through the full four-phase harness. Claude won all three. Margins ranged from 0.08 (barely above threshold) to 0.60 (moderate). Both Gemini and GPT acted as judge across the three trials, and both judge families overrode their own documented positional lean to call Claude the winner.</p>
+
+<figure>
+<img src="assets/conflict-harness-score-margin.png" alt="Bar chart of the compliance-launch-speed scenario showing score margins of 0.08, 0.40, and 0.60 across three independent trials, all won by Claude.">
+<figcaption>Score Margin is the difference between two artifacts' weighted rubric totals on the judge's normalized 1-5 scale</figcaption>
+</figure>
+
+<p>The same scenario produced the same directional winner across three independent trials, but the score margin varied materially from run to run. Repeated direction matters more than any single score margin — a model can have a real edge on a task type even when individual runs fluctuate in strength.</p>
+<p>This is, I believe, the strongest quality signal in the corpus: consistent directional winner, multiple independent trials, cross-judge confirmation, with both judge families going against their own lean to reach the same verdict.</p>
+<p>A second scenario, metric-gaming-engagement-loop, involves a PM discovering that an engagement metric is hitting targets while the underlying product health is deteriorating. Claude won two of the three trials, and the third produced a tie. GPT did not win any of the three. The pattern is directional rather than absolute, but the direction is consistent.</p>
+<p>These two scenarios are the right anchors for any external claim. The broader corpus pattern includes 30 swap-confirmed Claude wins across the eight scenario types and 4 swap-confirmed GPT wins. That is directionally meaningful, but the category-level story matters more than the raw counts: some families now look durable, some are mixed, and multi-trial data is still substantially more trustworthy than single-trial counts for individual scenarios.</p>
+
+<h3>FINDING 4: Swap-testing materially changes what the data says</h3>
+<p>Before position-swap testing, the raw Gemini-judged outcomes showed a headline number that looked like a large Claude advantage. After swap-testing, the picture changed significantly: some apparent wins were positional artifacts, some resolved to genuine ties, and some remained real quality signals.</p>
+
+<figure>
+<img src="assets/conflict-harness-swap-outcomes.png" alt="Flowchart: raw judged outcomes run through the swap test. Judge follows the model to the new side yields a quality-confirmed signal, staying with the same position yields a positional lean artifact, too close to call yields a genuine tie, and a weakened result needs more evidence or trials.">
+</figure>
+
+<p>Swap-testing turns a raw judged result into one of four more meaningful categories: quality-confirmed signal, positional artifact, genuine tie, or still-unresolved case. The swap test is not a nice-to-have — it is the filter that makes the rest of the findings interpretable. Any model comparison published without swap-testing is likely reporting positional lean as model quality.</p>
+
+<h2>What the winning artifacts actually look like</h2>
+<p>The most useful finding is not the count of wins. It is the pattern. Across Claude's swap-confirmed wins, the same structure appears:</p>
+<p><strong>The evidence gap is named explicitly, not worked around.</strong> Where GPT tends to treat ambiguous evidence as a constraint and produce an artifact within it, Claude tends to name the ambiguity as the actual problem. "The decision we're being asked to make cannot be made with the evidence we have" is a different artifact than "Here is a plan conditional on X, Y, and Z being true."</p>
+<p><strong>Binary choices get reframed as option menus.</strong> Ship vs. don't ship becomes: (1) ship with risk accepted and owner defined, (2) scope reduction to reduce risk with specific requirements stated, (3) pause for a validation sprint with a named deliverable and a date for revisiting the build decision. The PM now has a document to walk into a leadership meeting with instead of a recommendation that requires explaining from scratch.</p>
+<p><strong>The next artifact is named and specified.</strong> The output doesn't end with "gather more evidence." It ends with "the next artifact is a 2-page validation brief, here's who commissions it, here's what it needs to answer, here's when the decision gets revisited."</p>
+<p>GPT's winning pattern is different but equally coherent: it tends to stay tighter to the evidence, resist ungrounded specificity, and produce artifacts that are more honest about what isn't known. Claude often converts ambiguity into a decision-ready operating structure. GPT often stays closer to what the evidence actually supports.</p>
+<p>Whether you should specify a rollout percentage when it is not in the data is still an unresolved question in PM practice. One reading is that this is decision architecture that moves the work forward. Another is that it is invented specificity that creates false confidence. The harness surfaces that tradeoff. It does not settle it.</p>
+
+<h2>The caveat that makes this more credible, not less</h2>
+<p>The harness is good at evaluating which artifact reasons better. It is not a factual accuracy engine. That distinction matters.</p>
+<p>I found a consistent pattern across generated artifacts: the structural layer is trustworthy; the specificity layer is not.</p>
+<p>The structural layer includes decision frames, evidence gaps, pass/fail gates, and recommended next artifacts. It is generally well-formed and grounded in the scenario constraints. This is the part most useful to PM practitioners.</p>
+<p>The specificity layer includes the numbers, benchmarks, citations, and thresholds embedded within those structures. This layer regularly contains fabricated content. The figures are invented by the model to make the argument feel more grounded than the available evidence supports.</p>
+<p>Some examples from the corpus:</p>
+<p>A scenario with zero context files produced an artifact citing "internal modeling, ctx-1" as a source. That label sounded like an internal document reference, but it did not exist. The model invented a citation to support two key claims, and the judge did not catch it because the overall artifact was otherwise strong.</p>
+<p>A scenario with no market data produced an artifact stating that enterprise customers in specific verticals lose "0.3&ndash;1.8% of GMV to fraud." (GMV = gross merchandise volume.) No such figure was in the case packet. The judge did penalize this — the specific number was part of why the artifact lost. But the fabricated claim still appears in the committed output.</p>
+<p>A scenario specifying "6 months of engineering effort" produced an artifact translating that into "$600K&ndash;$1.2M in fully-loaded cost." The direction of the argument (this is expensive, raise the evidence bar) was correct. The number was made up.</p>
+<p>This pattern is not random. Models generate structurally correct arguments and then populate them with invented specifics to make the argument feel more rigorous. The harness now includes explicit constraints against this — injecting evidence boundaries into prompts, checking for phantom citations after generation, and instructing the judge to flag ungrounded specifics. But the pattern is still worth naming clearly.</p>
+<p>The practical implication: Treat the decision frame, the evidence gap list, the pass/fail gate structure, and the recommended next artifact as the reliable outputs. Treat specific numbers, thresholds, benchmarks, and citations as illustrative until verified against a real source.</p>
+<p>This does not invalidate the verdicts. A side can win by producing better decision architecture even when both sides contain fabricated supporting data. The harness is measuring reasoning quality and decision usefulness, not factual accuracy. That is still a real and useful thing to measure, but it is worth being clear about what it is.</p>
+
+<h2>The finding that has no winner</h2>
+<p>The most intellectually interesting result from the research didn't produce a clear verdict. It produced a genuine philosophical disagreement between two rigorous judges.</p>
+<p>I ran scenarios designed to probe a specific question: when the evidence is genuinely ambiguous, and not simply broken or obviously insufficient, which model makes the right call? These are cases where uncertainty is high enough that either acting or waiting is defensible.</p>
+<p>Example: a PM has an A/B test result that hit p=0.09 (directionally positive but short of the p&lt;0.05 threshold most teams use before calling a result statistically convincing), with a hard Q2 deadline. Do you ship, or do you wait for more data?</p>
+<p><strong>Gemini's verdict: Claude wins.</strong> Claude produced a gated conditional document: here's the specific evidence needed to clear the gate, here's what happens if you can't get it by the deadline, here's the exact decision frame for the exec who has to make the call.</p>
+<p><strong>GPT-as-judge's verdict: GPT wins.</strong> GPT's artifact avoided specifying a rollout percentage and validation window that weren't in the evidence packet. It was more honest about what it didn't know.</p>
+<p>The critical detail: both verdicts survived position-swap testing. This is not a case of one judge simply being wrong. Both judges came from different model families, and both went against their own positional lean. Even so, they reached opposite conclusions on the same artifact pair. The disagreement is genuine.</p>
+<p>Gemini rewards Claude's architectural specificity. GPT rewards GPT's evidence discipline. The harness surfaced the fact that both approaches have legitimate defenders. It cannot settle which is correct, because the real question is what "good PM judgment under uncertainty" actually means. On that point, there is no consensus.</p>
+<p>What this tells you practically: if you are in an ambiguous-evidence situation and you want the most actionable artifact, the current evidence suggests Claude. If you want the most epistemically honest artifact, it suggests GPT. If you are not sure which you need, run both. The disagreement between them is itself information.</p>
+
+<h2>A note on who can use the harness today</h2>
+<p>The system is trustworthy for technically sophisticated practitioners: people who understand the positional lean, know to look at the decisive dimension rather than just the winner label, treat the uncertainty payload as primary output when it's present, and run swap tests before publishing results.</p>
+<p>For this user, the harness produces real signal.</p>
+<p>For a less experienced user who runs the default command and reads the winner label at face value, the default output is actively misleading. A high-confidence verdict with a large margin reads as "this is clearly the better artifact." The correct reading is conditional on whether the judge went against its lean, whether the margin is stable across multiple runs, and what the decisive dimension was. None of that is obvious from the output itself.</p>
+<p>Closing this gap is one of the core product problems for ShipwrightPlus. The research works. The interpretation is non-trivial. The challenge is not better judging — it is better presentation of what the verdict actually means and what you should do next.</p>
+
+<h2>What this means for how you use AI today</h2>
+<p>My practical takeaway is not "always use Claude" or "always use GPT." It is that model choice matters unevenly. Sometimes it matters a lot, and sometimes it barely matters at all.</p>
+<p><strong>Standard PM work with no special ambiguity or constraint:</strong> Either model. In much of the corpus, the difference is not load-bearing. Prompt quality, structure, and evidence quality matter more. (Confidence: moderate)</p>
+<p><strong>Conflicting stakeholder signals or unclear leadership mandate:</strong> Claude. Claude more often turns ambiguity into a decision-ready operating structure. (Confidence: moderate to strong)</p>
+<p><strong>Requested artifact is impossible as specified due to a hard constraint:</strong> Claude. Claude more often reframes the work into decision architecture instead of forcing a brittle artifact. (Confidence: strongest current signal)</p>
+<p><strong>Historical analogue or retrospective strategy pattern-matching:</strong> GPT. GPT's confirmed wins are strongest where disciplined analogy matters. (Confidence: narrow but real)</p>
+<p><strong>Quantitative survivorship-bias diagnosis:</strong> GPT. GPT stays tighter to evidence and won the cleanest survivorship-bias example. (Confidence: narrow but real)</p>
+<p><strong>Genuinely ambiguous evidence, where either acting or waiting is defensible:</strong> Run both. The disagreement itself is informative because the models optimize for different notions of good judgment. (Confidence: high for the split, lower for a single winner)</p>
+<p><strong>Low-confidence verdicts, ties, or review-flagged cases:</strong> Trust the uncertainty payload more than the winner. The next-action guidance is often more useful than forcing a directional claim. (Confidence: strong)</p>
+<p><strong>Cases where both models look similar after swap-testing:</strong> It does not matter much. This is the zone where model choice is a distraction and workflow quality matters more. (Confidence: moderate)</p>
+<p><strong>On trusting single outputs:</strong> Multi-trial testing showed that even confirmed wins have real variance. The same scenario run three times produced margins ranging from 0.08 to 0.60. A single AI output, even from the "right" model for your scenario type, can be a weaker version of what that model is capable of. Running it a second time, or asking the other model to critique it, catches weaknesses the first run missed.</p>
+<p><strong>The most underrated output from cross-model comparison:</strong> Not the winner. The uncertainty payload. On hard cases, the harness produces a structured breakdown: what is missing, what questions would resolve the case, what evidence is needed, and what the next artifact should be. This payload is often more decision-useful than the winner label. Even when both models produce equally strong final artifacts, the critique exchange produces something neither model would have generated alone: a list of the questions the artifact does not answer.</p>
+
+<h2>What comes next?</h2>
+<p>This research is not finished. There are three open questions I want to follow up on because they affect how much you should trust the current findings and what you can expect from the tools going forward.</p>
+<p><strong>Open question 1: The genuine split.</strong> The most unresolved result in the corpus is the finding described above. Gemini and GPT reached opposite swap-confirmed verdicts on the same artifact pair. This is not a measurement error. It is a real disagreement about what makes a PM artifact good when the evidence is genuinely ambiguous. The harness cannot resolve this because no judge is neutral on it. What's needed next is a human-review panel: working PMs asked to evaluate both artifacts blind, with a clear rubric. If experienced PMs consistently prefer one approach, that becomes the calibration point for which judge to trust. If PMs also split, that is its own finding.</p>
+<p><strong>Open question 2: Sub-type patterns.</strong> The eight scenario types in the current corpus are coarse. "Executive ambiguity" covers both situations in which a leader has been unclear about priorities and those in which two leaders have given contradictory directives. These may call for different decision architectures. Expanding to 120&ndash;150 scenarios with finer-grained sub-types would let us identify not just which model wins on "stakeholder politics" in general, but which model wins when the conflict is between a technical leader and a business leader versus two business leaders, or when the stakes are a budget decision versus a roadmap decision.</p>
+<p><strong>Open question 3: Accessibility.</strong> The harness currently requires CLI access to three separate AI providers, a working Node.js environment, and enough familiarity with the command line to run a batch job. That significantly reduces the number of people who can use this tool effectively. The ShipwrightPlus roadmap includes a lighter-weight interface — the goal is to let a user describe their decision context in plain language, have the system classify the scenario type, and return a structured comparison without managing three API subscriptions or running scripts. If you have strong opinions about what form that should take, that is useful input.</p>
+
+<h2>How to get the tools</h2>
+<p><strong>Shipwright (open source)</strong> is at <a href="https://github.com/EdgeCaser/shipwright">github.com/EdgeCaser/shipwright</a>. It works with a single AI model. The structured PM workflow templates, adversarial review patterns, and readiness gates are all there, no additional subscriptions required.</p>
+<p><strong>ShipwrightPlus</strong> is in private development and is a different kind of tool. It requires CLI access to Claude (Anthropic subscription), GPT-5.4 (OpenAI Codex access), and Gemini (Google AI). Running a batch of 10 scenarios through the full four-phase debate, plus position-swap testing, consumes a meaningful number of tokens across three providers. If you are a Product Manager or team lead making decisions where being wrong costs real time and money — pricing changes, build-vs-buy calls, launch timing, restructuring choices — and you want access to the cross-model conflict harness, the calibrated scenario library, or the research findings, reach out at <a href="mailto:contact@edgecaser.com">contact@edgecaser.com</a>.</p>
+<p>The full scenario corpus, methodology documentation, and findings dashboard are available on request. All research was conducted using Claude Sonnet as Side A, GPT-5.4 (via the OpenAI Codex CLI, model_reasoning_effort=medium) as Side B, and Gemini 2.5 Pro as the primary judge. 80 scenarios, 8 scenario types.</p>
+
+<div class="cta">
+<h3>Making a model choice with real stakes behind it?</h3>
+<p>If your team is deciding which model to trust for decision-heavy work, Edgecaser can help you set up the evaluation and the review points before the choice gets expensive.</p>
+<a class="btn" href="/EdgecaserLLC-site/contact.html#book">Let's talk about your product</a>
+</div>
+
+</main>
+
+<footer class="pg-footer">
+<div class="pg-inner">
+<p>&copy; Edgecaser LLC</p>
+<nav aria-label="Footer"><a href="/EdgecaserLLC-site/contact.html#book">Book a call</a><a href="/EdgecaserLLC-site/blog/">Blog</a><a href="mailto:contact@edgecaser.com">Email</a><a href="https://www.linkedin.com/in/ianbrillembourg">LinkedIn</a></nav>
+</div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compositor: building my own book and audiobook production suite | Edgecaser LLC</title>
+<meta name="description" content="What I learned building Compositor, a four-stage pipeline that turns my novel Cold Storage into a multi-voice audiobook with Claude Code as a pair programmer.">
+<link rel="stylesheet" href="/EdgecaserLLC-site/assets/fonts/fonts.css">
+
+<style>
+:root{
+--bg:#FAF9F5;
+--surface:rgba(17,20,14,.04);
+--text:#11140E;
+--muted:rgba(17,20,14,.64);
+--line:rgba(17,20,14,.12);
+--accent:#34603F;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font-sans,Geist,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif);background:var(--bg);color:var(--text);line-height:1.7;}
+a{text-decoration:none;color:inherit;}
+.wrap{max-width:780px;margin:0 auto;padding:0 28px;}
+.pg-top{display:flex;justify-content:space-between;align-items:center;padding:22px max(28px, calc((100% - 980px) / 2));}
+.pg-top img{height:40px;display:block;}
+.pg-top nav a{margin-left:22px;text-decoration:none;color:var(--text);font-size:15px;}
+.pg-top nav a.pg-btn{color:var(--bg);}
+.pg-btn{display:inline-block;background:var(--text);color:var(--bg);text-decoration:none;border-radius:8px;padding:14px 28px;font-weight:600;font-size:16px;}
+.pg-btn:hover{background:#2B2F28;}
+.hero{padding:72px 0 36px;}
+.tag{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:8px 12px;color:var(--accent);font-family:var(--font-mono,"JetBrains Mono",ui-monospace,monospace);font-size:12px;letter-spacing:0;text-transform:uppercase;}
+.hero h1{font-size:48px;line-height:1.1;margin:18px 0 14px;font-weight:600;letter-spacing:0;}
+.hero .sub{font-size:21px;color:var(--muted);max-width:680px;}
+.meta{margin-top:18px;color:var(--muted);font-size:14px;}
+.meta a{color:var(--accent);}
+.divider{height:1px;background:var(--line);margin:30px 0 0;}
+.content{padding:50px 0 90px;}
+.content h2{font-size:30px;margin:44px 0 14px;}
+.content h3{font-size:22px;margin:30px 0 10px;}
+.content p{font-size:19px;color:rgba(17,20,14,.82);margin:0 0 22px;}
+.content ul{padding-left:24px;margin:10px 0 28px;}
+.content li{font-size:18px;color:rgba(17,20,14,.82);margin:8px 0;}
+.content a{color:var(--accent);}
+.content code{font-family:var(--font-mono,"JetBrains Mono",ui-monospace,monospace);font-size:.88em;background:var(--surface);padding:2px 6px;border-radius:4px;}
+.quote{margin:40px 0;padding:26px 30px;border-left:3px solid var(--accent);background:var(--surface);color:var(--text);font-size:22px;line-height:1.5;}
+.highlight{color:var(--accent);font-weight:700;}
+figure{margin:36px 0;}
+figure img{width:100%;border-radius:8px;border:1px solid var(--line);display:block;}
+figcaption{color:var(--muted);font-size:14px;margin-top:10px;text-align:center;}
+.cta{margin-top:64px;padding:38px;border-radius:8px;background:var(--text);color:var(--bg);}
+.cta h3{margin:0 0 12px;font-size:30px;line-height:1.12;}
+.cta p{color:rgba(250,249,245,.78);font-size:18px;}
+.btn{display:inline-block;margin-top:12px;background:var(--bg);color:var(--text);padding:13px 22px;border-radius:8px;font-weight:700;}
+.pg-footer{border-top:1px solid var(--line);color:var(--muted);font-size:14px;}
+.pg-footer .pg-inner{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:22px;padding:26px max(28px, calc((100% - 980px) / 2));}
+.pg-footer p{margin:0;color:var(--muted);}
+.pg-footer nav{display:flex;gap:16px;flex-wrap:wrap;justify-content:flex-end;}
+.pg-footer a{color:var(--text);text-decoration:none;}
+.pg-footer a:hover{text-decoration:underline;}
+img.heroimg{width:100%;border-radius:8px;margin:32px 0;border:1px solid var(--line);}
+@media(max-width:900px){.hero h1{font-size:40px}.content p,.content li{font-size:18px}}
+@media(max-width:600px){.hero h1{font-size:32px}.hero .sub{font-size:18px}.content h2{font-size:26px}.pg-top{flex-wrap:wrap;gap:10px}.pg-top img{height:36px}.pg-top nav{display:flex;flex-wrap:wrap;gap:8px 14px;width:100%}.pg-top nav a{margin-left:0;font-size:14px}.pg-footer nav{justify-content:flex-start}}
+</style>
+</head>
+
+<body>
+
+<header class="pg-top">
+<img src="/EdgecaserLLC-site/product-assets/00-edgecaser-08b-logo.png" alt="Edgecaser LLC logo">
+<nav><a href="/EdgecaserLLC-site/">Home</a><a href="/EdgecaserLLC-site/services.html">Services</a><a href="/EdgecaserLLC-site/use-cases.html">Use cases</a><a href="/EdgecaserLLC-site/about.html">About</a><a href="/EdgecaserLLC-site/blog/" aria-current="page">Blog</a><a class="pg-btn" href="/EdgecaserLLC-site/contact.html#book">Book a call</a></nav>
+</header>
+
+<section class="hero wrap">
+<span class="tag">AI production workflows</span>
+<h1>Compositor: building my own book and audiobook production suite</h1>
+<p class="sub">What I learned building a four-stage pipeline that turns my novel Cold Storage into a multi-voice audiobook, with Claude Code as a pair programmer.</p>
+<div class="meta">Edgecaser LLC &middot; 8 min read &middot; Originally published on <a href="https://www.linkedin.com/pulse/compositor-building-my-own-book-audiobook-production-ian-brillembourg-qbfmc/">LinkedIn</a>, May 12, 2026</div>
+<div class="divider"></div>
+</section>
+
+<main class="content wrap">
+
+<img class="heroimg" src="assets/compositor-book-audiobook-production.png" alt="A blue audio waveform on a white background.">
+
+<p>I wrote a literary crime novel called Cold Storage. It's set in a city where forty-three faiths hold legal standing. Two narrators alternate. Somewhere north of two dozen named characters speak on the page. Once the book was finished, I figured What The Heck, let's record the audiobook too.</p>
+<p>I get bored too easily.</p>
+<p>When I started thinking about an audiobook, the off-the-shelf options didn't fit. A single narrator doing all the voices flattens a book that depends on register switching. A professional cast and recording was a nonstarter for a passion project.</p>
+<p>The ElevenLabs Studio GUI works fine for shorter material but gets quietly expensive at full-book scale, and its API is gated behind a Pro-tier sales conversation I couldn't justify until I knew the workflow would even hold together.</p>
+<p>I built the pipeline myself. Two months of evenings with Claude Code as a pair programmer. Four stages, around three thousand lines of Python and a thousand of vanilla HTML and JavaScript. No frameworks. I'm calling it Compositor, after the print-shop role for the worker who arranged the metal type letter by letter. The shop, in this case, has a staff of one.</p>
+<p>Want to read the book? I'm in the process of querying agents now; it'll find a home eventually. Send me an email and I might send you the manuscript. Want to build something like this for your own novel? Send me an email, and I'll point you at the code.</p>
+<p>Here is what I learned.</p>
+
+<h2>1. Compile the manuscript</h2>
+<p>The book lives as a series of .docx files, one per chapter in a OneDrive folder. Each chapter is its own file because I edit ruthlessly, and a 90,000-word monolith is a UX disaster in Word. The downside is that "the manuscript" never exists as a single artifact until I make it.</p>
+<p>I wrote a VBA macro that opens every chapter in order, copies the contents into a fresh master document, applies the cover page, generates the table of contents, runs an Aptos typography pass, and saves the result to a uniquely ID'd file. Every build is timestamped. Nothing ever gets overwritten.</p>
+<p>One lesson, in retrospect: build the compile step before anything else. A reproducible, dated artifact is the foundation everything downstream keys off. Voice attribution. Sample pages for query submissions. The audiobook pipeline. Without a one-click compile, you end up arguing with yourself about which copy is canonical.</p>
+<p>I chose VBA over a Python plus Pandoc pipeline because Word's footnote, comment, and styling behavior is much easier to preserve when you stay inside Word. It was the right call. The macro is sixty lines.</p>
+
+<h2>2. Giving it a voice</h2>
+<p>This is the part of the pipeline I spent the most time on. If you get it wrong, every downstream stage compounds the error.</p>
+<p>Each compiled manuscript gets segmented into paragraphs and then into per-line segments. Narration on its own. Dialogue split out. Pauses inserted. Every segment becomes a row in a YAML file, which becomes the source of truth, and is human-readable on purpose. I can open it in any editor, see one segment per block, and confirm "yes, this is Frank, not Ashton" by eye.</p>
+<p>Attribution itself runs in two passes:</p>
+<ul>
+<li><strong>Regex pass.</strong> Heuristics catch the easy cases. Dialogue immediately preceded by "said Frank" or "Ashton asked" or attribution-by-pronoun-and-action. This handles maybe half the dialogue mechanically.</li>
+<li><strong>LLM refinement.</strong> What's left gets sent to a Claude Haiku call with three paragraphs of surrounding context. Fragmentary attributions. Echo dialogue. Conversations where two characters trade five lines with no tags.</li>
+</ul>
+
+<figure>
+<img src="assets/compositor-audiobook-script.png" alt="The Compositor YAML review editor for Cold Storage: a visual spot check of voice assignments per chapter, rendered dialogue segments color-coded by character, and the editable YAML source alongside.">
+<figcaption>Breaking every line of a manuscript into an audiobook script made easy</figcaption>
+</figure>
+
+<p>The combined accuracy on my book is around 99% across roughly 3,500 dialogue segments. I review by hand for the last one percent, which I do anyway because a couple of edge cases genuinely need eyes. Echo dialogue is the canonical trap: "After." / "After.", said in turn by two different characters, with no surrounding attribution. Both regex and LLM get it wrong about a third of the time, and the only fix is to read the manuscript.</p>
+<p>I had never used YAML before this. It diffs cleanly in git. It opens in any editor. The author can fix a misattribution by typing <code>voice: clement</code> and saving the file. A database would have been faster to query and slower to live with.</p>
+<p>Another lesson here is that two passes beat one model. The LLM is overkill for "she said, Ashton replied." Regex first, LLM only on what regex couldn't decide, ends up dramatically cheaper and faster than asking an LLM to do everything.</p>
+
+<h2>3. Recording packets</h2>
+<p>To record audio for a multi-voice book, the "actor" (read: me) needs three things per line: the text to read, the surrounding context, and a direction note. I generate a recording packet per chapter that bundles all three.</p>
+<p>The packet is a folder. Inside it:</p>
+<ul>
+<li><code>shotlist.json</code>, machine-readable list of segments to record, with text, voice, segment ID, and rationale.</li>
+<li><code>shotlist.md</code>, the same content formatted for human reading, with "before / line / after / rationale" blocks.</li>
+<li><code>recording.docx</code>, a Word version for actors who'd rather work in Word than in a code editor.</li>
+</ul>
+<p>The rationale field is the part I underestimated. Lines like "The lateral cabinets," are almost impossible to read well in isolation. They make no emotional sense as a standalone fragment. Once the rationale reads "Maren opens the handoff with her back turned; the fragment is the decision being made aloud, professional and deliberate, the first words of a risk she has chosen to take," the actor knows exactly what to do with it.</p>
+
+<figure>
+<img src="assets/compositor-recording-ui.png" alt="The Compositor recording tool: chapter picker, credit budget and assemble preflight, live mic level meter, a pending dialogue segment with voice settings sliders, and a waveform editor with trim handles.">
+</figure>
+
+<p>I write director's notes as a structured field in the YAML, not as freeform comments. They show up in the recording UI and in the shotlist docs. The same note that helps a human actor helps a future-me who is redoing a take six months later.</p>
+
+<h2>4. STS rendering and assembly</h2>
+<p>This is where the audiobook actually gets made. The architecture has three layers.</p>
+<p>The TTS layer (Text to Speech) renders any line nobody recorded as a performance. It hits the ElevenLabs API per segment, applies the voice's gain calibration, and stores the result by content hash. Cache key is a SHA-256 of text plus voice ID plus voice settings plus model plus pronunciation dictionary version. The same inputs always produce the same key, so deduplication is automatic. Two segments with identical text and voice share one cache file. Re-rendering after small edits is essentially free because most segments hash to the same key as before.</p>
+<p>The STS layer is the custom web tool that handles the human-performed lines. I open it in a browser, pick a chapter, hit Record on a line, speak it into my mic. The local server uploads the take to ElevenLabs' Speech-to-Speech endpoint with the target character's voice. STS preserves my prosody and timing (every breath, every hesitation) but swaps in the character's timbre. The result is "my acting, performed by Frank Carlotti."</p>
+<p>The STS tool grew a lot of features I didn't plan for:</p>
+<ul>
+<li>A waveform editor with drag handles for trimming clicks off the start and end of takes.</li>
+<li>Auto-trim on upload. Asymmetric, after the first version ate everyone's final consonants: aggressive on the head (where mouse-click bleeds happen), gentle on the tail (where soft fricatives live).</li>
+<li>A live level meter and scrolling waveform so I can see whether the mic is actually picking me up before I waste a take.</li>
+<li>Take history. Every Convert or Regenerate archives the previous take. I can A/B between attempts. I never lose audio I've already paid for.</li>
+<li>Per-segment overrides for stability, similarity, and style exaggeration, with hover tooltips explaining what each parameter does.</li>
+<li>A streaming "Assemble Chapter" button that runs the renderer end-to-end with live progress in the browser.</li>
+</ul>
+<p>The assembly layer (<code>reassemble_chapter.py</code>) is pure ffmpeg stitching. It walks the manifest, pulls each segment's MP3 from cache, applies the inter-segment silences encoded in the manifest, and concats it all into one chapter WAV. No API calls. No credit cost. Forty seconds for a chapter.</p>
+<p>Two things made the difference here. First, cache by content, not by position. Renaming, moving, or restructuring the manuscript doesn't break the cache because the cache doesn't care where a segment lives in the book. Second, mirror the machine layout to a human-readable one. The cache is opaque hashes, useless to browse. So I built a parallel layout that the tools also write to. When I want Maren's third line in chapter thirteen, I can find <code>015_generic_female_the_old.mp3</code> in a Finder window in two seconds.</p>
+<p>Cost transparency turned out to matter more than I expected. Every STS conversion is paid. The UI shows current credit balance, computes per-segment cost from the reference audio duration, and runs a preflight that estimates how many characters of TTS the next Assemble will burn. If the answer is twelve characters, I click without thinking. If the answer is forty-three thousand, I look first. This becomes increasingly important as you learn, inevitably, that you need to do an edit, or change a sentence. By breaking things down so granularly, I can swap whole chapters, paragraphs, or individual lines and only spend tokens on the new characters. The chapter gets stitched in and normalized, and I kept costs down.</p>
+
+<h2>Mistakes</h2>
+<p>A clean retrospective would be a lie.</p>
+<p>I burned a day chasing the ElevenLabs Studio API before discovering it was tier-gated behind a sales conversation.</p>
+<p>A cache-key bug took an infuriating time to find. My STS pipeline used a stale pronunciation-dictionary version ID from a config file, whereas my TTS pipeline retrieved the live version from the API at startup. Result: every cache key disagreed by one field. STS approvals went to one address. The assembler looked at another. A chapter rendered "perfectly" but with the wrong audio for every line I'd approved. The fix was three lines, once I knew where to look. Have the STS pipeline make the same API call the TTS pipeline did. The bug took an evening to find because everything looked like it was working, until I listened.</p>
+<p>If two systems are supposed to compute the same key, write a test that confirms it. Or, in my case, write a one-shot migration that compares old keys to new keys and reports drift. I have that now.</p>
+
+<h2>What's next</h2>
+<p>The remaining 1,500 dialogue lines of the book. Full reassembly into 41 chapters. An ID3-tagged release in M4B format for podcast players.</p>
+<p>I'm publishing Cold Storage the conventional way, querying agents and submitting samples. The audiobook is for me. I wanted a thing I could hand to someone and say, here, this is what I made. If the production suite turns out to be useful to other writers in the same boat, that's a bonus.</p>
+<p>Compositor runs entirely on my local machine. The git repo will be public when I clean it up enough to share.</p>
+<p>A few things I would do differently from day one. Pick the cache-key fields early and treat them as a versioned contract. Build the compile step first. Write director's notes as data, not as comments. Cache everything. Don't trust OneDrive.</p>
+
+<div class="cta">
+<h3>Building an AI workflow with real output quality stakes?</h3>
+<p>If you're wiring models into a production pipeline and want help deciding where the review points, caches, and quality gates belong, Edgecaser can help you think it through.</p>
+<a class="btn" href="/EdgecaserLLC-site/contact.html#book">Let's talk about your product</a>
+</div>
+
+</main>
+
+<footer class="pg-footer">
+<div class="pg-inner">
+<p>&copy; Edgecaser LLC</p>
+<nav aria-label="Footer"><a href="/EdgecaserLLC-site/contact.html#book">Book a call</a><a href="/EdgecaserLLC-site/blog/">Blog</a><a href="mailto:contact@edgecaser.com">Email</a><a href="https://www.linkedin.com/in/ianbrillembourg">LinkedIn</a></nav>
+</div>
+</footer>
+
+</body>
+</html>
